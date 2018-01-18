@@ -4,12 +4,12 @@
   "description": "RESTful server that allows users to store and manage contact information.",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon server.js"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/mjpoulsen/cop4331-group1-small.git",
-    "start": "nodemon server.js"
+    "url": "git+https://github.com/mjpoulsen/cop4331-group1-small.git"
   },
   "keywords": [
     "RESTful",

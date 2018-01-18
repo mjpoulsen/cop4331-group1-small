@@ -1,28 +1,54 @@
-const express = require('express');
+// ============================================================================================= //
+// Imports and Constant Initializations                                                          //
+// ============================================================================================= //
+
+const express = require('express'); // ExpressJs Framework.
 const app = express();
 const morgan = require('morgan'); // Logger.
-const bodyParser = require('body-parser'); // Helps to parses requests more efficiently.
-// may not need body-parser as Express comes with a json and urlencoded parser methods:
+const bodyParser = require('body-parser');
+// Helps to parses requests more efficiently.
+// May not need body-parser as Express comes with a json and urlencoded parser methods:
 // https://expressjs.com/en/api.html
 
-const mongoose = require('mongoose'); // Used for CRUD operations with MongoDB.
+// Used for CRUD operations with MongoDB.
+const mongoose = require('mongoose');
+// A third party Promise object; Mongoose's Promise is deprecated.
+mongoose.Promise = require('bluebird');
 
 const productRoutes = require('./api/routes/products');
 const orderRoutes = require('./api/routes/orders');
+const usersRoutes = require('./api/routes/users');
+const contactsRoutes = require('./api/routes/contacts');
+// ============================================================================================= //
+
+// ============================================================================================= //
+// MongoDB Connection                                                                            //
+// ============================================================================================= //
 
 // Connect to Database
-mongoose.Promise = global.Promise; // TODO Need to figure out where this is supposed to come from.
+// TODO find a way to retrieve PASSWORD from Environment Variable.
 mongoose.connect(
-    // 'mongodb+srv://admin:' + process.env.MONGO_ATLAS_PW + '@cop4331-small-project-rpedg.mongodb.net/test',
-    'mongodb://admin:' + process.env.MONGO_ATLAS_PW +
-    '@cop4331-small-project-shard-00-00-rpedg.mongodb.net:27017,cop4331-small-project-shard-00-01-rpedg.mongodb.net:27017,cop4331-small-project-shard-00-02-rpedg.mongodb.net:27017/test?ssl=true&replicaSet=cop4331-small-project-shard-0&authSource=admin',
+    'mongodb://admin:' + 'test123' +
+    '@cop4331-small-project-shard-00-00-rpedg.mongodb.net:27017,cop4331-small-project-shard-' +
+    '00-01-rpedg.mongodb.net:27017,cop4331-small-project-shard-00-02-rpedg.mongodb.net:27017/' +
+    'test?ssl=true&replicaSet=cop4331-small-project-shard-0&authSource=admin',
     {
         useMongoClient: true
     }
 );
+// ============================================================================================= //
+
+// ============================================================================================= //
+// Development Tools                                                                             //
+// ============================================================================================= //
 
 // Logs developer information, such as: GET / 404 1.761 ms - 34
 app.use(morgan('dev'));
+// ============================================================================================= //
+
+// ============================================================================================= //
+// Server Configuration                                                                          //
+// ============================================================================================= //
 
 // Reference: https://www.npmjs.com/package/body-parser
 // Parses urlencoded data; extended is set to false to support simple requests.
@@ -37,7 +63,7 @@ app.use(function(req, res, next) {
     res.header('Access-Control-Allow-Headers',
         'Origin, X-Requested-With, Content-Type, Accept, Authorization');
 
-    // Let's the browser know which HTTP methods are allowed by the server.
+    // Let's the browser know which HTTP methods the server allows.
     if (req.method === 'OPTIONS') {
         res.header('Access-Control-Allow-Methods', 'PUT, POST, PATCH, DELETE, GET');
         return res.status(200).json({});
@@ -45,11 +71,16 @@ app.use(function(req, res, next) {
     // Must route requests by calling next(), otherwise all requests will be blocked.
     next();
 });
+// ============================================================================================= //
 
 // ============================================================================================= //
-/* Route handling. */
+// Route Handling                                                                                //
+// ============================================================================================= //
+
 app.use('/products', productRoutes);
 app.use('/orders', orderRoutes);
+app.use('/users', usersRoutes);
+app.use('/users', contactsRoutes);
 
 // Handles requests sent to invalid APIs.
 app.use(function(req, res, next) {
@@ -57,7 +88,6 @@ app.use(function(req, res, next) {
     error.status = 404;
     next(error);
 });
-// ============================================================================================= //
 
 // Catches all thrown errors.
 app.use(function(error, req, res, next) {
@@ -68,5 +98,6 @@ app.use(function(error, req, res, next) {
         }
     });
 });
+// ============================================================================================= //
 
 module.exports = app;

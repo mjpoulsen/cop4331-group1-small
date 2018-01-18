@@ -2,9 +2,6 @@
 const express = require('express');
 // Router object from Express. Helps to route requests to the correct API.
 const router = express.Router();
-const mongoose = require('mongoose');
-const bluebirdPromise = require('bluebird');
-
 // Import Schema for MongoDB.
 const Product = require('../models/product');
 
@@ -39,7 +36,6 @@ router.post('/', function(req, res, next) {
 /* GET Request with Id. */
 router.get('/:productId', function(req, res, next) {
     const id = req.params.productId;
-    var query = Product.findOne({_id: id});
     Product.findById(id)
         .exec()
         .then(function(doc) {
@@ -50,16 +46,6 @@ router.get('/:productId', function(req, res, next) {
             console.log(err);
             res.status(500).json({error: err});
         });
-
-    // Use bluebird
-    // mongoose.Promise = require('bluebird');
-    // assert.equal(query.exec().constructor, require('bluebird'));
-    //
-    // // Use q. Note that you **must** use `require('q').Promise`.
-    // mongoose.Promise = require('q').Promise;
-    // assert.ok(query.exec() instanceof require('q').makePromise);
-
-
 });
 
 /* PATCH Request with Id. */

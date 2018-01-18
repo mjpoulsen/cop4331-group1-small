@@ -1,6 +1,6 @@
 {
   "env": {
     "PORT": 8081,
-    "MONGO_ATLAS_PW": "Mw88UL0q07Jubgf4"
+    "MONGO_ATLAS_PW": "test123"
   }
 }

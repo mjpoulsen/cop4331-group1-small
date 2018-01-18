@@ -1,0 +1,35 @@
+{
+  "name": "cop4331-contact-web-app",
+  "version": "1.0.0",
+  "description": "RESTful server that allows users to store and manage contact information.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mjpoulsen/cop4331-group1-small.git"
+  },
+  "keywords": [
+    "RESTful",
+    "API",
+    "server",
+    "cop4331",
+    "contact",
+    "web",
+    "app"
+  ],
+  "author": "COP4331-Group1",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/mjpoulsen/cop4331-group1-small/issues"
+  },
+  "homepage": "https://github.com/mjpoulsen/cop4331-group1-small#readme",
+  "dependencies": {
+    "bluebird": "^3.5.1",
+    "express": "^4.16.2",
+    "mongoose": "^5.0.0",
+    "morgan": "^1.9.0",
+    "nodemon": "^1.14.11"
+  }
+}

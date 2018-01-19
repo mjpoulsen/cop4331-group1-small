@@ -28,14 +28,23 @@ router.get('/', function(req, res, next) {
 */
 router.post('/allcontacts', function(req, res, next) {
     const usersID = req.body.user_id;
-    Contact.find({user_id: usersID }, function(err, docs) {
-        if (!err){
-            res.status(200).json({
-                message: 'Handling POST requests for /contacts',
-                returnedContact: docs
-            });
-        } else {throw err;}
-    });
+    if (usersID) {
+        Contact.find({user_id: usersID }, function(err, docs) {
+            if (!err){
+                res.status(200).json({
+                    message: 'Handling POST requests for /contacts',
+                    returnedContact: docs
+                });
+            } else {
+                res.status(500).json({
+                    message: err
+                });
+            }
+        });
+    } else {
+        res.status(204).json({message: 'No content. UserID was not provided.'});
+    }
+
 });
 
 /* GET Request with Id. */
@@ -54,7 +63,7 @@ router.get('/:contactId', function(req, res, next) {
                 res.status(500).json({error: err});
             });
     } else {
-        res.status(500).json({error: "Must supply Contact ID."});
+        res.status(204).json({error: "Must supply Contact ID."});
     }
 
 });
@@ -86,28 +95,41 @@ router.get('/:contactId', function(req, res, next) {
     }
 */
 router.post('/', function(req, res, next) {
-    const contact = new Contact({
-        _id: new mongoose.Types.ObjectId(),
-        user_id: req.body.user_id,
-        first_name: req.body.first_name,
-        last_name: req.body.last_name,
-        phone_number: req.body.phone_number,
-        street: req.body.street,
-        city: req.body.city,
-        state: req.body.state,
-        zip: req.body.zip
-    });
+    const user_id = req.body.user_id;
+    const first_name = req.body.first_name;
+    const last_name = req.body.last_name;
+    const phone_number = req.body.phone_number;
+    const street = req.body.street;
+    const city = req.body.city;
+    const state = req.body.state;
+    const zip = req.body.zip;
 
-    contact.save().then(function(result) {
-        console.log(result);
-    }).catch(function(err) {
-        console.log(err);
-    });
+    if (user_id && first_name && last_name) {
+        const contact = new Contact({
+            _id: new mongoose.Types.ObjectId(),
+            user_id: user_id,
+            first_name: first_name,
+            last_name: last_name,
+            phone_number: phone_number,
+            street: street,
+            city: city,
+            state: state,
+            zip: zip
+        });
 
-    res.status(201).json({
-        message: 'Handling POST requests to /contacts',
-        createdUser: contact
-    });
+        contact.save().then(function(result) {
+            console.log(result);
+            res.status(201).json({
+                message: 'Handling POST requests to /contacts',
+                createdUser: contact
+            });
+        }).catch(function(err) {
+            console.log(err);
+            res.status(500).json({error: err});
+        });
+    } else {
+        res.status(204).json({error: 'No content. UserID or First Name or Last Name was not provided.'});
+    }
 });
 
 /* PATCH Request. */

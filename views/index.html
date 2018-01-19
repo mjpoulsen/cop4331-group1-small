@@ -1,0 +1,70 @@
+<html>
+<head>
+	<title>COP 4331 LAMP Stack Demo</title>
+	<script type="text/javascript" src="../angular.min.js"></script>
+	<script type="text/javascript" src="../js/code.js"></script>
+	<script type="text/javascript" src="../js/md5.js"></script>
+	<!--<script src = "http://www.myersdaily.org/joseph/javascript/md5.js"></script>-->
+	<link href="../css/style.css" rel="stylesheet">	
+</head>
+<body>
+
+<h1>COP 4331 MEAN Stack Demo</h1>
+
+<div ng-app="myApp" ng-controller="myCtrl">
+
+	<div id="loginDiv">
+		Please login<br />
+		User Name: <input type="text" id="loginName"><br />
+		Password: <input type="password" id="loginPassword"><br />
+        <span id="loginResult"></span><br />
+		<button type="button" id="loginButton" class="buttons" ng-click="doLogin();"> Login </button>
+		<button type="button" id="createAccountButton" class="buttons" ng-click="createUser();"> Create Account </button>
+
+	</div>
+    <div id="createUserDiv" style="...; visibility:hidden;">
+        Please login<br />
+        User Name*: <input type="text" id="newUserName"><br />
+        Password*: <input type="password" id="newUserPassword"><br />
+        First Name: <input type="text" id="newUserFirstName"><br />
+        Last Name: <input type="text" id="newUserLastName"><br />
+        Email: <input type="email" id="newUserEmail"><br />
+        <button type="button" id="submitUser" class="buttons" ng-click="submitUser();"> Submit Account </button>
+        <span id="newUserError"></span>
+    </div>
+	<div id="loggedInDiv" style="display:none; visibility:hidden;">
+		Logged in as <span id="userName"></span><br />
+		<button type="button" id="logoutButton" class="buttons" ng-click="doLogout();"> Log Out </button>
+	</div>
+    <div id="viewContactsUIDiv" style="...; visibility:hidden;">
+        <br />
+        <span id="contactListMessage"></span>
+        <br />
+        Contact List Size: <span id="contactList"></span>
+        <table id="contactTable" style="width:100%">
+            <caption>Contact List</caption>
+            <tr>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>Phone Number</th>
+            </tr>
+        </table>
+    </div>
+	<div id="accessUIDiv" style="display:none; visibility:hidden;">
+		<br />
+
+		Search for Color: <input type="text" id="searchText">
+		<button type="button" id="searchColorButton" class="buttons" ng-click="searchColor();"> Search Color </button><br />
+		<span id="colorSearchResult"></span>
+		<select id="colorList" style="display:none; visibility:hidden;">
+			<!-- <option value="volvo">Volvo</option> -->
+		</select><br /><br />
+
+		Add Color: <input type="text" id="colorText">
+		<button type="button" id="addColorButton" class="buttons" ng-click="addColor();"> Add Color </button><br />
+		<span id="colorAddResult"></span>
+	</div>
+</div>
+
+</body>
+</html>

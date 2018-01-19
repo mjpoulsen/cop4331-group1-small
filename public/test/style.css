@@ -1,0 +1,48 @@
+body 
+{
+    background-image: url("background.png");
+    background-repeat: repeat;
+}
+
+h1 
+{
+    font-size: 40px;
+}
+
+#loginDiv
+{
+	font-size: 30px;
+}
+
+#loggedInDiv
+{
+	font-size: 30px;
+}
+
+#accessUIDiv
+{
+	font-size: 30px;
+}
+
+.buttons
+{
+	font-size: 30px;
+}
+
+#loginName
+{
+	font-size: 30px;
+}
+#loginPassword
+{
+	font-size: 30px;
+}
+#searchText
+{
+	font-size: 30px;
+}
+#colorText
+{
+	font-size: 30px;
+}
+

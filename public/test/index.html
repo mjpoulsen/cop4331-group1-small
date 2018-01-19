@@ -1,0 +1,41 @@
+<html>
+<head>
+	<title>COP 4331 LAMP Stack Demo</title>
+	<script type="text/javascript" src="angular.min.js"></script>
+	<script type="text/javascript" src="code.js"></script>
+	<link href="style.css" rel="stylesheet">	
+</head>
+<body>
+
+<h1>COP 4331 MEAN Stack Demo</h1>
+
+<div ng-app="myApp" ng-controller="myCtrl">
+	<div id="loginDiv">
+		Please login<br />
+		Login: <input type="text" id="loginName"><br />
+		Password: <input type="text" id="loginPassword"><br />
+		<button type="button" id="loginButton" class="buttons" ng-click="doLogin();"> Do It </button>
+		<span id="loginResult"></span>
+	</div>
+	<div id="loggedInDiv" style="display:none; visibility:hidden;">
+		Logged in as <span id="userName"></span><br />
+		<button type="button" id="logoutButton" class="buttons" ng-click="doLogout();"> Log Out </button>
+	</div>
+	<div id="accessUIDiv" style="display:none; visibility:hidden;">
+		<br />
+
+		Search for Color: <input type="text" id="searchText">
+		<button type="button" id="searchColorButton" class="buttons" ng-click="searchColor();"> Search Color </button><br />
+		<span id="colorSearchResult"></span>
+		<select id="colorList" style="display:none; visibility:hidden;">
+			<!-- <option value="volvo">Volvo</option> -->
+		</select><br /><br />
+
+		Add Color: <input type="text" id="colorText">
+		<button type="button" id="addColorButton" class="buttons" ng-click="addColor();"> Add Color </button><br />
+		<span id="colorAddResult"></span>
+	</div>
+</div>
+
+</body>
+</html>

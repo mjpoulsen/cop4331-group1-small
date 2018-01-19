@@ -1,0 +1,80 @@
+body
+{
+    background-image: url("../images/background.png");
+    background-repeat: repeat;
+}
+
+h1 
+{
+    font-size: 40px;
+}
+
+table, th, td {
+    border: 1px solid black;
+    border-collapse: collapse;
+}
+
+th, td {
+    padding: 15px;
+}
+
+th {
+    text-align: left;
+    background-color: black;
+    color: white;
+}
+
+tr:nth-child(even) {
+    background-color: #eee;
+}
+tr:nth-child(odd) {
+    background-color:#fff;
+}
+
+#loginDiv
+{
+	font-size: 30px;
+}
+
+#loggedInDiv
+{
+	font-size: 30px;
+}
+
+#accessUIDiv
+{
+	font-size: 30px;
+}
+
+#createUserDiv
+{
+	font-size: 30px;
+}
+
+#viewContactsUIDiv
+{
+	font-size: 30px;
+}
+
+.buttons
+{
+	font-size: 30px;
+}
+
+#loginName
+{
+	font-size: 30px;
+}
+#loginPassword
+{
+	font-size: 30px;
+}
+#searchText
+{
+	font-size: 30px;
+}
+#colorText
+{
+	font-size: 30px;
+}
+

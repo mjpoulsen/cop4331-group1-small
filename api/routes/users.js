@@ -29,16 +29,23 @@ router.get('/', function(req, res, next) {
 router.post('/login', function(req, res, next) {
     const user_name = req.body.user_name;
     const password = req.body.password;
-    User.findOne({user_name: user_name, password: password})
-        .exec()
-        .then(function(doc) {
-            console.log(doc);
-            res.status(200).json(doc);
-        })
-        .catch(function(err) {
-            console.log(err);
-            res.status(500).json({error: err});
-        });
+
+    if (user_name && password) {
+        User.findOne({user_name: user_name, password: password})
+            .exec()
+            .then(function(doc) {
+                console.log(doc);
+                res.status(200).json(doc);
+            })
+            .catch(function(err) {
+                console.log(err);
+                res.status(500).json({error: err});
+            });
+    } else {
+        res.status(204).json({error: 'Credentials not provided.'});
+    }
+
+
 });
 
 /* POST Request. */
@@ -61,25 +68,37 @@ router.post('/login', function(req, res, next) {
     }
 */
 router.post('/', function(req, res, next) {
-    const user = new User({
-        _id: new mongoose.Types.ObjectId(),
-        user_name: req.body.user_name,
-        password: req.body.password,
-        first_name: req.body.first_name,
-        last_name: req.body.last_name,
-        email: req.body.email
-    });
+    const user_name = req.body.user_name;
+    const password = req.body.password;
+    const first_name = req.body.first_name;
+    const last_name = req.body.last_name;
+    const email = req.body.email;
 
-    user.save().then(function(result) {
-        console.log(result);
-    }).catch(function(err) {
-        console.log(err);
-    });
+    if (user_name && password) {
+        const user = new User({
+            _id: new mongoose.Types.ObjectId(),
+            user_name: user_name,
+            password: password,
+            first_name: first_name,
+            last_name: last_name,
+            email: email
+        });
 
-    res.status(201).json({
-        message: 'Handling POST requests to /users',
-        createdUser: user
-    });
+        user.save().then(function(result) {
+            console.log(result);
+        }).catch(function(err) {
+            console.log(err);
+        });
+
+        res.status(201).json({
+            message: 'Handling POST requests to /users',
+            createdUser: user
+        });
+    } else {
+        res.status(204).json({error: "Missing user_name or password."});
+    }
+
+
 });
 
 /* PATCH Request. */

@@ -10,6 +10,8 @@ const bodyParser = require('body-parser');
 // May not need body-parser as Express comes with a json and urlencoded parser methods:
 // https://expressjs.com/en/api.html
 
+const path = require('path');
+
 // Used for CRUD operations with MongoDB.
 const mongoose = require('mongoose');
 // A third party Promise object; Mongoose's Promise is deprecated.
@@ -76,6 +78,15 @@ app.use(function(req, res, next) {
 // ============================================================================================= //
 // Route Handling                                                                                //
 // ============================================================================================= //
+app.engine('.html', require('ejs').__express);
+app.set('views', __dirname + '/views');
+app.set('view engine', 'html');
+app.use(express.static(path.join(__dirname, 'public')));
+
+app.get('/', function(req, res, next) {
+    res.render('index');
+});
+
 
 app.use('/users', usersRoutes);
 app.use('/contacts', contactsRoutes);

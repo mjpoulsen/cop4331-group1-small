@@ -1,10 +1,9 @@
-// TODO get full list of contacts.
 // TODO support editing contact.
 // TODO support deleting contact.
-// TODO return list of contacts only associated to a user.
 
 const express = require('express');
 const router = express.Router();
+const mongoose = require('mongoose');
 
 const Contact = require('../models/contact');
 
@@ -15,23 +14,55 @@ router.get('/', function(req, res, next) {
     });
 });
 
+/* POST Request. */
+/*
+    Returns all contacts associated with a User's ID.
+
+    JSON Requirements:
+        user_id: String,
+
+    Example:
+    {
+        user_id: 5a5ffa7467d8f7bef4623040,
+    }
+*/
+router.post('/allcontacts', function(req, res, next) {
+    const usersID = req.body.user_id;
+    Contact.find({user_id: usersID }, function(err, docs) {
+        if (!err){
+            res.status(200).json({
+                message: 'Handling POST requests for /contacts',
+                returnedContact: docs
+            });
+        } else {throw err;}
+    });
+});
+
 /* GET Request with Id. */
 router.get('/:contactId', function(req, res, next) {
     const id = req.params.contactId;
-    Contact.findById(id)
-        .exec()
-        .then(function(doc) {
-            console.log(doc);
-            res.status(200).json(doc);
-        })
-        .catch(function(err) {
-            console.log(err);
-            res.status(500).json({error: err});
-        });
+    // TODO determine whether or no if-statement is necessary. As of now, route is not get called if contactId is null.
+    if (id) {
+        Contact.findById(id)
+            .exec()
+            .then(function(doc) {
+                console.log(doc);
+                res.status(200).json(doc);
+            })
+            .catch(function(err) {
+                console.log(err);
+                res.status(500).json({error: err});
+            });
+    } else {
+        res.status(500).json({error: "Must supply Contact ID."});
+    }
+
 });
 
 /* POST Request. */
 /*
+    Adds a Contact to the Contacts table.
+
     JSON Requirements:
         user_id: String,
         first_name: String,
@@ -75,7 +106,7 @@ router.post('/', function(req, res, next) {
 
     res.status(201).json({
         message: 'Handling POST requests to /contacts',
-        createdUser: user
+        createdUser: contact
     });
 });
 

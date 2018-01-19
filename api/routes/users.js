@@ -1,10 +1,9 @@
-// TODO create login function.
 // TODO support editing profile.
 // TODO decide whether or not to delete a user.
-// TODO allow multiple users to create an account.
 
 const express = require('express');
 const router = express.Router();
+const mongoose = require('mongoose');
 
 const User = require('../models/user');
 
@@ -27,8 +26,7 @@ router.get('/', function(req, res, next) {
         password: 5f4dcc3b5aa765d61d8327deb882cf99
     }
 */
-// TODO test logic.
-router.get('/login', function(req, res, next) {
+router.post('/login', function(req, res, next) {
     const user_name = req.body.user_name;
     const password = req.body.password;
     User.findOne({user_name: user_name, password: password})

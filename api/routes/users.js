@@ -14,7 +14,8 @@ router.get('/', function(req, res, next) {
     });
 });
 
-/* GET Login Request. */
+/* POST Login Request. */
+// If status code 204 is returned, the credentials do not exist.
 /*
     JSON Requirements:
         user_name: String
@@ -35,14 +36,18 @@ router.post('/login', function(req, res, next) {
             .exec()
             .then(function(doc) {
                 console.log(doc);
-                res.status(200).json(doc);
+                if (doc){
+                    res.status(200).json(doc);
+                } else {
+                    res.status(204).json({error: "Could not find matching credentials."});
+                }
             })
             .catch(function(err) {
                 console.log(err);
                 res.status(500).json({error: err});
             });
     } else {
-        res.status(204).json({error: 'Credentials not provided.'});
+        res.status(204).json({error: "Credentials not provided."});
     }
 
 
@@ -67,7 +72,7 @@ router.post('/login', function(req, res, next) {
         email: jdoe@aol.com
     }
 */
-router.post('/', function(req, res, next) {
+router.post('/submituser', function(req, res, next) {
     const user_name = req.body.user_name;
     const password = req.body.password;
     const first_name = req.body.first_name;

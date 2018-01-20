@@ -1,6 +1,6 @@
 <html>
 <head>
-	<title>COP 4331 LAMP Stack Demo</title>
+	<title>COP 4331 Contact Web App</title>
 	<script type="text/javascript" src="../angular.min.js"></script>
 	<script type="text/javascript" src="../js/code.js"></script>
 	<script type="text/javascript" src="../js/md5.js"></script>
@@ -9,7 +9,7 @@
 </head>
 <body>
 
-<h1>COP 4331 MEAN Stack Demo</h1>
+<h1>COP 4331 Contact Web App</h1>
 
 <div ng-app="myApp" ng-controller="myCtrl">
 
@@ -22,21 +22,23 @@
 		<button type="button" id="createAccountButton" class="buttons" ng-click="createUser();"> Create Account </button>
 
 	</div>
+    <div id="loggedInDiv" style="display:none; visibility:hidden;">
+        Logged in as <span id="userName"></span><br />
+        <button type="button" id="logoutButton" class="buttons" ng-click="doLogout();"> Log Out </button>
+        <span id="userId" style="...; visibility:hidden;"></span>
+    </div>
     <div id="createUserDiv" style="...; visibility:hidden;">
-        Please login<br />
         User Name*: <input type="text" id="newUserName"><br />
         Password*: <input type="password" id="newUserPassword"><br />
         First Name: <input type="text" id="newUserFirstName"><br />
         Last Name: <input type="text" id="newUserLastName"><br />
         Email: <input type="email" id="newUserEmail"><br />
         <button type="button" id="submitUser" class="buttons" ng-click="submitUser();"> Submit Account </button>
+        <button type="button" id="home" class="buttons" ng-click="home();"> Cancel </button>
         <span id="newUserError"></span>
     </div>
-	<div id="loggedInDiv" style="display:none; visibility:hidden;">
-		Logged in as <span id="userName"></span><br />
-		<button type="button" id="logoutButton" class="buttons" ng-click="doLogout();"> Log Out </button>
-	</div>
     <div id="viewContactsUIDiv" style="...; visibility:hidden;">
+        <button type="button" id="addContact" class="buttons" ng-click="addContact();"> Add Contact </button>
         <br />
         <span id="contactListMessage"></span>
         <br />
@@ -47,8 +49,24 @@
                 <th>First Name</th>
                 <th>Last Name</th>
                 <th>Phone Number</th>
+                <th>Street</th>
+                <th>City</th>
+                <th>State</th>
+                <th>Zip</th>
             </tr>
         </table>
+    </div>
+    <div id="addContactDiv" style="...; visibility:hidden;">
+        First Name*: <input type="text" id="newContactFirstName"><br />
+        Last Name*: <input type="text" id="newContactLastName"><br />
+        Phone*: <input type="text" id="newContactPhone"><br />
+        Street: <input type="text" id="newContactStreet"><br />
+        City: <input type="text" id="newContactCity"><br />
+        State: <input type="text" id="newContactState"><br />
+        Zip: <input type="text" id="newContactZip"><br />
+        <button type="button" id="submitContact" class="buttons" ng-click="submitContact();"> Add Contact </button>
+        <button type="button" id="contacts" class="buttons" ng-click="contacts();"> Cancel </button>
+        <span id="newContactError"></span>
     </div>
 	<div id="accessUIDiv" style="display:none; visibility:hidden;">
 		<br />

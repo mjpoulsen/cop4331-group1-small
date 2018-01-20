@@ -51,6 +51,11 @@ tr:nth-child(odd) {
 	font-size: 30px;
 }
 
+#addContactDiv
+{
+    font-size: 30px;
+}
+
 #viewContactsUIDiv
 {
 	font-size: 30px;

@@ -24,33 +24,28 @@ app.controller('myCtrl', function($scope, $http) {
         hideOrShow( "loginDiv", false);
         hideOrShow( "createUserDiv", true);
 
-        document.getElementById("newUserName").innerHTML = "";
-        document.getElementById("newUserPassword").innerHTML = "";
-        document.getElementById("newUserFirstName").innerHTML = "";
-        document.getElementById("newUserLastName").innerHTML = "";
-        document.getElementById("newUserEmail").innerHTML = "";
+        clearElements();
     }
 
     $scope.submitUser = function () {
         var user_name = document.getElementById("newUserName").value;
         var md5password = md5(document.getElementById("newUserPassword").value);
-        var first_name = document.getElementById("newUserFirstName").value;
-        var last_name = document.getElementById("newUserLastName").value;
+        firstName = document.getElementById("newUserFirstName").value;
+        lastName = document.getElementById("newUserLastName").value;
         var email = document.getElementById("newUserEmail").value;
 
 
         $http.post('/users/submituser', {
             "user_name": user_name,
             "password" : md5password,
-            "first_name" : first_name,
-            "last_name" : last_name,
+            "first_name" : firstName,
+            "last_name" : lastName,
             "email" : email
         })
         .then(function(response) {
             if (response.status == 201) {
 
-                document.getElementById("loginName").value = "";
-                document.getElementById("loginPassword").value = "";
+                clearElements();
                 document.getElementById("loginResult").innerHTML = "Please login with your user name and password.";
 
                 hideOrShow( "loggedInDiv", false);
@@ -59,7 +54,47 @@ app.controller('myCtrl', function($scope, $http) {
                 hideOrShow( "createUserDiv", false);
                 hideOrShow( "viewContactsUIDiv", false);
             } else {
-                document.getElementById("newUserError").innerHTML = "Please verify a User Name and Password was submitted.";
+                document.getElementById("newUserError").innerHTML = "Please verify  a User Name and Password was submitted.";
+                return;
+            }
+        });
+    }
+
+    $scope.submitContact = function () {
+
+        var first_name = document.getElementById("newContactFirstName").value;
+        var last_name = document.getElementById("newContactLastName").value;
+        var phone = document.getElementById("newContactPhone").value;
+        var street = document.getElementById("newContactStreet").value;
+        var city = document.getElementById("newContactCity").value;
+        var state = document.getElementById("newContactState").value;
+        var zip = document.getElementById("newContactZip").value;
+
+
+        $http.post('/contacts/addcontact', {
+            "user_id": userId,
+            "first_name" : first_name,
+            "last_name" : last_name,
+            "phone_number" : phone,
+            "street" : street,
+            "city" : city,
+            "state" : state,
+            "zip" : zip
+        })
+        .then(function(response) {
+            if (response.status == 201) {
+
+                clearElements();
+                getUsersContacts();
+
+                hideOrShow( "loggedInDiv", true);
+                hideOrShow( "accessUIDiv", false);
+                hideOrShow( "loginDiv", false);
+                hideOrShow( "createUserDiv", false);
+                hideOrShow( "viewContactsUIDiv", true);
+                hideOrShow( "addContactDiv", false);
+            } else {
+                document.getElementById("newContactError").innerHTML = "Please verify all * attributes are submitted." + userId;
                 return;
             }
         });
@@ -89,17 +124,17 @@ app.controller('myCtrl', function($scope, $http) {
                 userId = jsonObject._id;
 
                 document.getElementById("userName").innerHTML = firstName + " " + lastName;
+                document.getElementById("userId").innerHTML = userId;
 
-                document.getElementById("loginName").value = "";
-                document.getElementById("loginPassword").value = "";
-
-                getUsersContacts(userId);
+                clearElements();
+                getUsersContacts();
 
                 hideOrShow( "loggedInDiv", true);
                 hideOrShow( "accessUIDiv", false);
                 hideOrShow( "loginDiv", false);
                 hideOrShow( "createUserDiv", false);
                 hideOrShow( "viewContactsUIDiv", true);
+                hideOrShow( "addContactDiv", false);
 			} else {
 				document.getElementById("loginResult").innerHTML = "User/Password combination incorrect.";
 				return;
@@ -107,12 +142,19 @@ app.controller('myCtrl', function($scope, $http) {
 		});
 	};
 
-    function getUsersContacts(userId) {
+    function getUsersContacts() {
         $http.post('/contacts/allcontacts', {
             "user_id": userId
         })
         .then(function(response) {
             if (response.status == 200) {
+                //Clear table
+                var tableSize =  document.getElementById("contactTable").rows.length;
+                for (i = tableSize.valueOf() - 1; i > 0; i--) {
+                    document.getElementById("contactTable").deleteRow(i);
+                }
+
+
                 var jsonObject = response.data;
                 var retContacts = jsonObject.returnedContact;
                 var size = 0, key;
@@ -120,10 +162,13 @@ app.controller('myCtrl', function($scope, $http) {
                     if (retContacts.hasOwnProperty(key)) size++;
                 }
 
+
+
                 document.getElementById("contactList").innerHTML = size.toString();
 
-                var contactTable = document.getElementById("contactTable")
-                var i, contact, row, firstNameCell, lastNameCell, phoneCell;
+                var contactTable = document.getElementById("contactTable");
+                var i, contact, row;
+                var firstNameCell, lastNameCell, phoneCell, streetCell, cityCell, stateCell, zipCell;
                 for (i = 0; i < size; i++) {
                     // Obtain contact.
                     contact = retContacts[i];
@@ -133,19 +178,57 @@ app.controller('myCtrl', function($scope, $http) {
                     firstNameCell = row.insertCell(0);
                     lastNameCell = row.insertCell(1);
                     phoneCell = row.insertCell(2);
+                    streetCell = row.insertCell(3);
+                    cityCell = row.insertCell(4);
+                    stateCell = row.insertCell(5);
+                    zipCell = row.insertCell(6);
+
 
                     // Add contact information to row.
                     firstNameCell.innerHTML = contact.first_name;
                     lastNameCell.innerHTML = contact.last_name;
                     phoneCell.innerHTML = contact.phone_number;
+                    streetCell.innerHTML = contact.street;
+                    cityCell.innerHTML = contact.city;
+                    stateCell.innerHTML = contact.state;
+                    zipCell.innerHTML = contact.zip;
+
                 }
 
-            } else {
-                // TODO Path is not taken. Should server side adjust to allow this path to be taken?
-                document.getElementById("contactListMessage").innerHTML = "No contacts could be found for your account.";
-                return;
             }
         });
+    }
+
+    $scope.home = function () {
+        hideOrShow( "loggedInDiv", false);
+        hideOrShow( "accessUIDiv", false);
+        hideOrShow( "loginDiv", true);
+        hideOrShow( "createUserDiv", false);
+        hideOrShow( "viewContactsUIDiv", false);
+        hideOrShow( "addContactDiv", false);
+    }
+
+    $scope.contacts = function () {
+        clearElements();
+
+        hideOrShow( "loggedInDiv", true);
+        hideOrShow( "accessUIDiv", false);
+        hideOrShow( "loginDiv", false);
+        hideOrShow( "createUserDiv", false);
+        hideOrShow( "viewContactsUIDiv", true);
+        hideOrShow( "addContactDiv", false);
+    }
+
+    $scope.addContact = function () {
+
+        clearElements();
+
+        hideOrShow( "loggedInDiv", true);
+        hideOrShow( "accessUIDiv", false);
+        hideOrShow( "loginDiv", false);
+        hideOrShow( "createUserDiv", false);
+        hideOrShow( "viewContactsUIDiv", false);
+        hideOrShow( "addContactDiv", true);
     }
 
 
@@ -162,57 +245,26 @@ app.controller('myCtrl', function($scope, $http) {
         hideOrShow( "viewContactsUIDiv", false);
 	};
 
-	
+    function clearElements() {
 
-	$scope.addColor = function()
-	{
-		var newColor = document.getElementById("colorText").value;
-		document.getElementById("colorAddResult").innerHTML = "";
-		
-		var jsonPayload = '{"color" : "' + newColor + '", "userId" : ' + userId + '}';
-		var url = urlBase + '/AddColor.' + extension;
-		
-		$http.post('/AddColor', {
-			"color": newColor,
-			"userId" : userId
-		}).then(function(response) {
-			if (response.data == 'success') {
-				document.getElementById("colorAddResult").innerHTML = "Color has been added";
-			} else {
-				document.getElementById("colorAddResult").innerHTML = response.data;
-			}
-		});
-	};
+        console.log("Clearing elements...")
 
-	$scope.searchColor = function()
-	{
-		var srch = document.getElementById("searchText").value;
-		document.getElementById("colorSearchResult").innerHTML = "";
-		
-		var colorList = document.getElementById("colorList");
-		colorList.innerHTML = "";
-		
-		var jsonPayload = '{"search" : "' + srch + '"}';
-		var url = urlBase + '/SearchColors.' + extension;
-		$http.post('/SearchColors', {
-			"search": srch
-		}).then(function(response) {
-			if (response.data != 'failed') {
-				hideOrShow( "colorList", true );
-					
-				document.getElementById("colorSearchResult").innerHTML = "Color(s) has been retrieved";
-				var jsonObject = response.data;
-				var i;
-				for( i=0; i<jsonObject.length; i++ )
-				{
-					var opt = document.createElement("option");
-					opt.text = jsonObject[i].Name;
-					opt.value = "";
-					colorList.options.add(opt);
-				}
-			} else {
-				document.getElementById("colorSearchResult").innerHTML = response.data;
-			}
-		});
-	}
+        document.getElementById("loginName").value = "";
+        document.getElementById("loginPassword").value = "";
+
+        document.getElementById("newContactFirstName").value = "";
+        document.getElementById("newContactLastName").value = "";
+        document.getElementById("newContactPhone").value = "";
+        document.getElementById("newContactStreet").value = "";
+        document.getElementById("newContactCity").value = "";
+        document.getElementById("newContactState").value = "";
+        document.getElementById("newContactZip").value = "";
+
+        document.getElementById("newUserName").value = "";
+        document.getElementById("newUserPassword").value = "";
+        document.getElementById("newUserFirstName").value = "";
+        document.getElementById("newUserLastName").value = "";
+        document.getElementById("newUserEmail").value = "";
+    }
+
 });

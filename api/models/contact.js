@@ -9,7 +9,7 @@ const contactSchema = mongoose.Schema({
     street: String,
     city: String,
     state: String,
-    zip: Number
+    zip: String
 });
 
 module.exports = mongoose.model('Contact', contactSchema);

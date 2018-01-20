@@ -94,7 +94,7 @@ router.get('/:contactId', function(req, res, next) {
         zip: 32789
     }
 */
-router.post('/', function(req, res, next) {
+router.post('/addcontact', function(req, res, next) {
     const user_id = req.body.user_id;
     const first_name = req.body.first_name;
     const last_name = req.body.last_name;
@@ -104,7 +104,7 @@ router.post('/', function(req, res, next) {
     const state = req.body.state;
     const zip = req.body.zip;
 
-    if (user_id && first_name && last_name) {
+    if (user_id && first_name && last_name && phone_number) {
         const contact = new Contact({
             _id: new mongoose.Types.ObjectId(),
             user_id: user_id,

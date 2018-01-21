@@ -26,17 +26,12 @@ const contactsRoutes = require('./api/routes/contacts');
 // ============================================================================================= //
 
 // Connect to Database
-// TODO find a way to retrieve PASSWORD from Environment Variable.
 const password = process.env.MONGO_ATLAS_PW;
 mongoose.connect(
-    'mongodb://cruder:' + password +
+    'mongodb://admin:' + password +
     '@cop4331-small-project-shard-00-00-rpedg.mongodb.net:27017,cop4331-small-project-shard-' +
     '00-01-rpedg.mongodb.net:27017,cop4331-small-project-shard-00-02-rpedg.mongodb.net:27017/' +
     'test?ssl=true&replicaSet=cop4331-small-project-shard-0&authSource=admin'
-    // ,
-    // {
-    //     useMongoClient: true
-    // }
 );
 // ============================================================================================= //
 

@@ -1,2 +1,6 @@
 /.idea/
 /myapp/
+.DS_Store
+api/.DS_Store
+public/.DS_Store
+public/image/.DS_Store

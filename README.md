@@ -14,7 +14,6 @@ TODOs:
 SOLVED:
 
 	1. Decide type of stack. LAMP, MEAN, WISA, etc.
-		Solution: MEAN
 	2. Invite everyone to Slack channel.
 
 RUN:
@@ -37,31 +36,44 @@ API:
 	
 	Supports: GET and POST
 
-	PublicAPI:
+	User API:
 
-		GetProductById
-		localhost:8080/products/5a5ffa7467d8f7bef4623040
-		Output:
-		{
-    		"_id": "5a5ffa7467d8f7bef4623040",
-    		"name": "Harry Potter 5",
-    		"price": 12.99,
-    		"__v": 0
-		}
-
-		InsertProduct
-		localhost:8080/products
+		Login
+		localhost:8080/users/login
 		SampleInput:
 		{
-			"name": "Harry Potter 5",
-			"price": "12.99"
+    		"user_name": "admin",
+    		"password": "f4dcc3b5aa765d61d8327deb882cf99 5"    		
 		}
-		Output:
+
+		Submit User
+		localhost:8080/submituser
+		SampleInput:
 		{
-    		"message": "Handling POST requests to /products",
-    		"createdProduct": {
-        		"_id": "5a5ffa7467d8f7bef4623040",
-        		"name": "Harry Potter 5",
-        		"price": 12.99
-    		}
-		}
+        	"user_name": "admin",
+        	"password": "5f4dcc3b5aa765d61d8327deb882cf99",
+        	"first_name": "john",
+        	"last_name": "doe",
+        	"email": "jdoe@aol.com"
+    	}
+
+	Contact API:
+
+		View All Contacts
+		localhost:8080/contacts/allcontacts
+		{
+     	   "user_id": "5a5ffa7467d8f7bef4623040"
+    	}
+
+    	Add Contact
+    	localhost:8080/contacts/addcontact
+    	{
+	        "user_id": "5a5ffa7467d8f7bef4623040",
+	        "first_name": "john",
+	        "last_name": "doe",
+	        "phone_number": 4"07-867-5309",
+	        "street": "123 Park Ave.",
+	        "city": "Winter Park",
+	        "state": "Florida",
+	        "zip": "32789"
+	    }

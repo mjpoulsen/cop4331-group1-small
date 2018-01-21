@@ -19,11 +19,11 @@ router.get('/', function(req, res, next) {
     Returns all contacts associated with a User's ID.
 
     JSON Requirements:
-        user_id: String,
+        user_id: String
 
     Example:
     {
-        user_id: 5a5ffa7467d8f7bef4623040,
+        user_id: 5a5ffa7467d8f7bef4623040
     }
 */
 router.post('/allcontacts', function(req, res, next) {

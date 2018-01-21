@@ -116,7 +116,7 @@ router.patch('/', function(req, res, next) {
 /* DELETE Request. */
 router.delete('/', function(req, res, next) {
     res.status(200).json({
-        message: 'Handling DELETE requests for /users'
+        message: 'Handling DELETE requests for /contacts'
     });
 });
 

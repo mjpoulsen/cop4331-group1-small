@@ -140,10 +140,38 @@ router.patch('/', function(req, res, next) {
 });
 
 /* DELETE Request. */
-router.delete('/', function(req, res, next) {
-    res.status(200).json({
-        message: 'Handling DELETE requests for /contacts'
-    });
+// If status code 204 is returned, the credentials do not exist.
+/*
+    JSON Requirements:
+        contactId: String
+
+    Example:
+    {
+        "userId": "5f4dcc3b5aa765d61d8327deb882cf99"
+        "contactId": "admin"
+    }
+*/
+router.delete('/deleteContact', function(req, res, next) {
+    var contactId = req.body.contactId;
+    var userId = req.body.userId;
+    if (contactId) {
+        Contact.remove({_id: contactId, user_id: userId}, function(err) {
+            if (!err) {
+                    res.status(200).json({
+                        message: 'Contact was deleted.'
+                    });
+                } else {
+                    res.status(500).json({
+                        error: 'I don\'t know...'
+                    });
+                }
+        });
+    } else {
+        res.status(204).json({
+            error: 'Please provide a contactId or userId.'
+        });
+    }
+    
 });
 
 module.exports = router;

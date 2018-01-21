@@ -124,7 +124,6 @@ app.controller('myCtrl', function($scope, $http) {
                 userId = jsonObject._id;
 
                 document.getElementById("userName").innerHTML = firstName + " " + lastName;
-                document.getElementById("userId").innerHTML = userId;
 
                 clearElements();
                 getUsersContacts();
@@ -163,6 +162,8 @@ app.controller('myCtrl', function($scope, $http) {
                 }
 
 
+                
+                var contactIds = new Array(size);
 
                 document.getElementById("contactList").innerHTML = size.toString();
 
@@ -185,6 +186,7 @@ app.controller('myCtrl', function($scope, $http) {
 
 
                     // Add contact information to row.
+                    contactIds[i + 1] = contact._id;
                     firstNameCell.innerHTML = contact.first_name;
                     lastNameCell.innerHTML = contact.last_name;
                     phoneCell.innerHTML = contact.phone_number;
@@ -192,7 +194,6 @@ app.controller('myCtrl', function($scope, $http) {
                     cityCell.innerHTML = contact.city;
                     stateCell.innerHTML = contact.state;
                     zipCell.innerHTML = contact.zip;
-
                 }
 
             }

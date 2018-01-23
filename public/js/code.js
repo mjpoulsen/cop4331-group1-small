@@ -200,6 +200,118 @@ app.controller('myCtrl', function($scope, $http) {
         });
     }
 
+
+
+    // User types search tags into search bar, separated by spaces.
+    // For each contact, combine all contact fields into a single string separated by spaces.
+    // If the contact's combined string contains all tags entered by user, add the contact to the cleared table.
+    // Continue looping through contacts to check for others that contain all the search tags.
+    $scope.search = function(){
+        $http.post('/contacts/allcontacts', {
+            "user_id": userId
+        })
+        .then(function(response) {
+            if (response.status == 200)
+            {
+                //Clear table
+                var tableSize =  document.getElementById("contactTable").rows.length;
+                for (i = tableSize.valueOf() - 1; i > 0; i--)
+                {
+                    document.getElementById("contactTable").deleteRow(i);
+                }
+
+                var jsonObject = response.data;
+                var retContacts = jsonObject.returnedContact;
+                var size = 0, key;
+
+                for (key in retContacts)
+                {
+                    if (retContacts.hasOwnProperty(key)) size++;
+                }
+
+                var contactIds = new Array(size);
+                document.getElementById("contactList").innerHTML = size.toString();
+                var contactTable = document.getElementById("contactTable");
+                var i, contact, row;
+                var firstNameCell, lastNameCell, phoneCell, streetCell, cityCell, stateCell, zipCell;
+                var contactIndex = 0;
+
+                for (i = 0; i < size; i++)
+                {
+                    contact = retContacts[i];
+
+                    id = contact._id;
+                    fName = contact.first_name;
+                    lName = contact.last_name;
+                    pNum = contact.phone_number;
+                    street = contact.street;
+                    city = contact.city;
+                    state = contact.state;
+                    zip = contact.zip;
+
+                    var combinedStr = fName + " " + lName + " " + pNum + " " + street + " " + city + " " + state + " " + zip;
+
+                    // Eliminate any character that isn't a letter, digit, or space (useful for inconsistent phone # formats)
+                    var contactString = combinedStr.replace(/[^a-zA-Z0-9 ]/g, '').toLowerCase();
+
+                    var searchInput = document.getElementById("searchBar").value.toLowerCase();
+
+
+                    // This returns a tokenized array of character groups (strings) that are alphanumeric or underscore.
+                    var searchTags = searchInput.match(/\w+/g);
+                    // var searchTags = searchInput.match(/\b\w+\b/g);
+
+                    var contactMatches = true;
+                    var tag;
+                    var tagIndex;
+
+                    // If any of the search tags are not in a contact's data, the contact is not a match
+                    for(tagIndex = 0; tagIndex < searchTags.length; tagIndex++)
+                    {
+                        tag = searchTags[tagIndex];
+                        if (contactString.includes(tag) == false)
+                        {
+                            contactMatches = false;
+                            break;
+                        }
+                    }
+
+                    // If the contact contains all search tags, then it's a match so it's added to the list
+                    if (contactMatches)
+                    {
+                        // Create new row.
+                        row = contactTable.insertRow(contactIndex + 1);
+                        firstNameCell = row.insertCell(0);
+                        lastNameCell = row.insertCell(1);
+                        phoneCell = row.insertCell(2);
+                        streetCell = row.insertCell(3);
+                        cityCell = row.insertCell(4);
+                        stateCell = row.insertCell(5);
+                        zipCell = row.insertCell(6);
+
+                        // Add contact information to row.
+                        contactIds[contactIndex + 1] = contact._id;
+                        firstNameCell.innerHTML = contact.first_name;
+                        lastNameCell.innerHTML = contact.last_name;
+                        phoneCell.innerHTML = contact.phone_number;
+                        streetCell.innerHTML = contact.street;
+                        cityCell.innerHTML = contact.city;
+                        stateCell.innerHTML = contact.state;
+                        zipCell.innerHTML = contact.zip;
+
+                        contactIndex += 1;
+                    }
+                }
+            }
+        });
+    }
+
+    $scope.clearSearch = function()
+    {
+        getUsersContacts();
+    }
+
+
     $scope.home = function () {
         hideOrShow( "loggedInDiv", false);
         hideOrShow( "accessUIDiv", false);

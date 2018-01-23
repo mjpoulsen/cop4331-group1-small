@@ -41,6 +41,15 @@
         <span id="contactListMessage"></span>
         <br />
         Contact List Size: <span id="contactList"></span>
+
+        <br />
+        <!-- Search Bar & Buttons: -->
+        <input type="text" id="searchBar">
+        <button type="button" id="searchButton" class="buttons" ng-click="search();"> Search Contacts </button>
+        <button type="button" id="clearSearchButton" class="buttons" ng-click="clearSearch();"> Clear Search </button>
+        <br />
+
+
         <table id="contactTable" style="width:100%">
             <caption>Contact List</caption>
             <tr>

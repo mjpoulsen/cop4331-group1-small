@@ -312,6 +312,78 @@ app.controller('myCtrl', function($scope, $http) {
     }
 
 
+    // Given 2 contacts' data for some field (2 first names, 2 streets, etc.) determine which order they should go in when sorting
+    function compareContacts(a, b)
+    {
+        // Remove characters that aren't alphanumeric, digits, or space.
+        // Capital letters could affect the order when sorting.
+        var contactA = a.replace(/[^a-zA-Z0-9 ]/g, '').toLowerCase()
+        var contactB = b.replace(/[^a-zA-Z0-9 ]/g, '').toLowerCase()
+
+        // a comes first
+        if (contactA < contactB)
+            return -1;
+
+        // b comes first
+        if (contactA > contactB)
+            return 1;
+
+        // a and b are equal, order doesn't matter
+        return 0;
+    }
+
+
+    // Use Selection Sort to sort table in ascending order by the given column (column 0 = first name, 1 = last name, 2 = phone #, etc.)
+    $scope.sortContacts = function(column)
+    {
+        $http.post('/contacts/allcontacts',
+        {
+            "user_id": userId
+        })
+        .then(function(response) {
+            if (response.status == 200)
+            {
+                var contactTable = document.getElementById("contactTable");
+                var tableSize = contactTable.rows.length;
+
+                // If there is only 1 contact in the table (or empty table) it doesn't need to be sorted
+                if (tableSize <= 2)
+                {
+                    return;
+                }
+                
+                // Selection Sort
+                for (var row = 1; row < tableSize.valueOf(); row++)
+                {
+                    var minRow = row;
+
+                    // Find the row below of the current row that has the lowest value for the column we're checking.
+                    // This is the row that will trade positions with the current row.
+                    for (var laterRow = row + 1; laterRow < tableSize.valueOf(); laterRow++)
+                    {
+                        if(compareContacts(contactTable.rows[minRow].cells[column].innerHTML, contactTable.rows[laterRow].cells[column].innerHTML) > 0)
+                        {
+                            minRow = laterRow;
+                        }
+                    }
+
+                    // Swap current row with a row below it that has the lowest value, if it is also lower than the current row's value.
+                    if (minRow != row)
+                    {
+                        // Swap 2 rows one cell at a time
+                        for (var col = 0; col < contactTable.rows[row].cells.length.valueOf(); col++)
+                        {
+                            var temp = contactTable.rows[row].cells[col].innerHTML;
+                            contactTable.rows[row].cells[col].innerHTML = contactTable.rows[minRow].cells[col].innerHTML;
+                            contactTable.rows[minRow].cells[col].innerHTML = temp;
+                        }
+                    }
+                }
+            }
+        });
+    }
+
+
     $scope.home = function () {
         hideOrShow( "loggedInDiv", false);
         hideOrShow( "accessUIDiv", false);

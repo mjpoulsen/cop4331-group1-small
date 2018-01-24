@@ -86,7 +86,6 @@ app.controller('myCtrl', function($scope, $http) {
 
                 clearElements();
                 getUsersContacts();
-
                 hideOrShow( "loggedInDiv", true);
                 hideOrShow( "accessUIDiv", false);
                 hideOrShow( "loginDiv", false);
@@ -127,7 +126,7 @@ app.controller('myCtrl', function($scope, $http) {
 
                 clearElements();
                 getUsersContacts();
-
+				
                 hideOrShow( "loggedInDiv", true);
                 hideOrShow( "accessUIDiv", false);
                 hideOrShow( "loginDiv", false);
@@ -169,7 +168,8 @@ app.controller('myCtrl', function($scope, $http) {
 
                 var contactTable = document.getElementById("contactTable");
                 var i, contact, row;
-                var firstNameCell, lastNameCell, phoneCell, streetCell, cityCell, stateCell, zipCell;
+                var firstNameCell, lastNameCell, phoneCell, streetCell, cityCell, stateCell, zipCell, deleteCell;
+				var deleteButton;
                 for (i = 0; i < size; i++) {
                     // Obtain contact.
                     contact = retContacts[i];
@@ -183,10 +183,14 @@ app.controller('myCtrl', function($scope, $http) {
                     cityCell = row.insertCell(4);
                     stateCell = row.insertCell(5);
                     zipCell = row.insertCell(6);
+					deleteCell = row.insertCell(7);
+					deleteCell.setAttribute('id', 'row'+(i+1)+'cell7');
+					deleteCell.style.visibility = "hidden";
+					
+					
 
 
                     // Add contact information to row.
-                    contactIds[i + 1] = contact._id;
                     firstNameCell.innerHTML = contact.first_name;
                     lastNameCell.innerHTML = contact.last_name;
                     phoneCell.innerHTML = contact.phone_number;
@@ -194,12 +198,53 @@ app.controller('myCtrl', function($scope, $http) {
                     cityCell.innerHTML = contact.city;
                     stateCell.innerHTML = contact.state;
                     zipCell.innerHTML = contact.zip;
+					deleteCell.innerHTML = contact._id;
+					firstNameCell.setAttribute('id', 'row'+(i+1)+'cell0');
+					lastNameCell.setAttribute('id', 'row'+(i+1)+'cell1');
                 }
 
             }
         });
     }
+	
+	$scope.deleteContact = function()
+	{
+		hideOrShow("deleteContactDiv", true);
+	}
+	$scope.removeFromList = function()
+	{
+		var firstName = document.getElementById('deletedContactFirstName').value;
+		var lastName = document.getElementById('deletedContactLastName').value;
+		var table = document.getElementById('contactTable');
+		for(var i = 1, row; row = table.rows[i]; i++)
+		{
+			var contact_id = document.getElementById('row'+i+'cell7').innerHTML;
+			if((document.getElementById('row'+(i)+'cell0').innerHTML == firstName) && 
+			(document.getElementById('row'+(i)+'cell1').innerHTML == lastName))
+			{			
+						 var data = 
+						 {
+                    "userId": userId,
+                    "contactId": contact_id
+						 };
+						$http.post('/contacts/deleteContact', JSON.stringify(data))
+						.then(function(response) 
+						{
+						if (response.status == 200) {
 
+					console.log("deleted");
+					getUsersContacts();
+			   		hideOrShow("deleteContactDiv", false);
+					clearElements();
+            } 		else {
+                console.log(response.status);
+            }
+						});
+			}
+		}
+		hideOrShow("deleteContactDiv", false);
+		clearElements();
+	}
     $scope.home = function () {
         hideOrShow( "loggedInDiv", false);
         hideOrShow( "accessUIDiv", false);
@@ -266,6 +311,15 @@ app.controller('myCtrl', function($scope, $http) {
         document.getElementById("newUserFirstName").value = "";
         document.getElementById("newUserLastName").value = "";
         document.getElementById("newUserEmail").value = "";
+		document.getElementById("deletedContactFirstName").value = "";
+		document.getElementById("deletedContactLastName").value = "";
     }
+	
+	$scope.cancelDelete = function()
+	{
+		document.getElementById("deletedContactFirstName").value = "";
+		document.getElementById("deletedContactLastName").value = "";
+		hideOrShow("deleteContactDiv", false);
+	}
 
 });

@@ -12,6 +12,7 @@ TODOs:
 	3. Edit & delete contacts functions.
 	4. Larger search bar
 	5. Smaller sort buttons
+	6. Protect agains SQL injection
 	
 
 SOLVED:

@@ -37,6 +37,13 @@
     </div>
     <div id="viewContactsUIDiv" style="...; visibility:hidden;">
         <button type="button" id="addContact" class="buttons" ng-click="addContact();"> Add Contact </button>
+		 <button type="button" id="delContact" class="buttons" ng-click="deleteContact();"> Delete Contact </button>
+		 	<div id = "deleteContactDiv" style="...; visibility:hidden;">
+			First Name of contact to delete: <input type = "text" id="deletedContactFirstName"></br>
+			Last Name of contact to delete: <input type = "text" id="deletedContactLastName"></br>
+		<button type="button" id="delButton" class="buttons" ng-click="removeFromList();"> Delete </button>
+		<button type="button" id="cancelButton" class="buttons" ng-click="cancelDelete();"> Cancel </button>
+			</div>
         <br />
         <span id="contactListMessage"></span>
         <br />
@@ -62,7 +69,7 @@
         City: <input type="text" id="newContactCity"><br />
         State: <input type="text" id="newContactState"><br />
         Zip: <input type="text" id="newContactZip"><br />
-        <button type="button" id="submitContact" class="buttons" ng-click="submitContact();"> Add Contact </button>
+        <button type="button" id="submitContact" class="buttons" ng-click="submitContact();"> Submit Contact </button>
         <button type="button" id="contacts" class="buttons" ng-click="contacts();"> Cancel </button>
         <span id="newContactError"></span>
     </div>

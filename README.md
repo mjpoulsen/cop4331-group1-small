@@ -9,6 +9,10 @@ TODOs:
 
 	1. Determine roles.
 	2. Document entry API.
+	3. Edit & delete contacts functions.
+	4. Larger search bar
+	5. Smaller sort buttons
+	6. Protect against SQL injection
 	
 
 SOLVED:

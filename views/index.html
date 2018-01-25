@@ -41,6 +41,24 @@
         <span id="contactListMessage"></span>
         <br />
         Contact List Size: <span id="contactList"></span>
+
+        <br />
+        <!-- Search Bar & Buttons: -->
+        <input type="text" id="searchBar">
+        <button type="button" id="searchButton" class="buttons" ng-click="search();"> Search Contacts </button>
+        <button type="button" id="clearSearchButton" class="buttons" ng-click="clearSearch();"> Clear Search </button>
+        <br />
+        
+        <button type="button" id="fNameSortButton" class="buttons" ng-click="sortContacts(0);"> Sort by First Name </button>
+        <button type="button" id="fNameSortButton" class="buttons" ng-click="sortContacts(1);"> Sort by Last Name </button>
+        <button type="button" id="fNameSortButton" class="buttons" ng-click="sortContacts(2);"> Sort by Phone # </button>
+        <button type="button" id="fNameSortButton" class="buttons" ng-click="sortContacts(3);"> Sort by Street </button>
+        <button type="button" id="fNameSortButton" class="buttons" ng-click="sortContacts(4);"> Sort by City </button>
+        <button type="button" id="fNameSortButton" class="buttons" ng-click="sortContacts(5);"> Sort by State </button>
+        <button type="button" id="fNameSortButton" class="buttons" ng-click="sortContacts(6);"> Sort by ZIP </button>
+        <br />
+
+
         <table id="contactTable" style="width:100%">
             <caption>Contact List</caption>
             <tr>

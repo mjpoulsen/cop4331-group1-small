@@ -206,6 +206,7 @@ app.controller('myCtrl', function($scope, $http) {
             }
         });
     }
+
 	
 	$scope.deleteContact = function()
 	{
@@ -245,6 +246,192 @@ app.controller('myCtrl', function($scope, $http) {
 		hideOrShow("deleteContactDiv", false);
 		clearElements();
 	}
+
+
+
+
+    // User types search tags into search bar, separated by spaces.
+    // For each contact, combine all contact fields into a single string separated by spaces.
+    // If the contact's combined string contains all tags entered by user, add the contact to the cleared table.
+    // Continue looping through contacts to check for others that contain all the search tags.
+    $scope.search = function(){
+        $http.post('/contacts/allcontacts', {
+            "user_id": userId
+        })
+        .then(function(response) {
+            if (response.status == 200)
+            {
+                //Clear table
+                var tableSize =  document.getElementById("contactTable").rows.length;
+                for (i = tableSize.valueOf() - 1; i > 0; i--)
+                {
+                    document.getElementById("contactTable").deleteRow(i);
+                }
+
+                var jsonObject = response.data;
+                var retContacts = jsonObject.returnedContact;
+                var size = 0, key;
+
+                for (key in retContacts)
+                {
+                    if (retContacts.hasOwnProperty(key)) size++;
+                }
+
+                var contactIds = new Array(size);
+                document.getElementById("contactList").innerHTML = size.toString();
+                var contactTable = document.getElementById("contactTable");
+                var i, contact, row;
+                var firstNameCell, lastNameCell, phoneCell, streetCell, cityCell, stateCell, zipCell;
+                var contactIndex = 0;
+
+                for (i = 0; i < size; i++)
+                {
+                    contact = retContacts[i];
+
+                    id = contact._id;
+                    fName = contact.first_name;
+                    lName = contact.last_name;
+                    pNum = contact.phone_number;
+                    street = contact.street;
+                    city = contact.city;
+                    state = contact.state;
+                    zip = contact.zip;
+
+                    var combinedStr = fName + " " + lName + " " + pNum + " " + street + " " + city + " " + state + " " + zip;
+
+                    // Eliminate any character that isn't a letter, digit, or space (useful for inconsistent phone # formats)
+                    var contactString = combinedStr.replace(/[^a-zA-Z0-9 ]/g, '').toLowerCase();
+
+                    var searchInput = document.getElementById("searchBar").value.toLowerCase();
+
+
+                    // This returns a tokenized array of character groups (strings) that are alphanumeric or underscore.
+                    var searchTags = searchInput.match(/\w+/g);
+                    // var searchTags = searchInput.match(/\b\w+\b/g);
+
+                    var contactMatches = true;
+                    var tag;
+                    var tagIndex;
+
+                    // If any of the search tags are not in a contact's data, the contact is not a match
+                    for(tagIndex = 0; tagIndex < searchTags.length; tagIndex++)
+                    {
+                        tag = searchTags[tagIndex];
+                        if (contactString.includes(tag) == false)
+                        {
+                            contactMatches = false;
+                            break;
+                        }
+                    }
+
+                    // If the contact contains all search tags, then it's a match so it's added to the list
+                    if (contactMatches)
+                    {
+                        // Create new row.
+                        row = contactTable.insertRow(contactIndex + 1);
+                        firstNameCell = row.insertCell(0);
+                        lastNameCell = row.insertCell(1);
+                        phoneCell = row.insertCell(2);
+                        streetCell = row.insertCell(3);
+                        cityCell = row.insertCell(4);
+                        stateCell = row.insertCell(5);
+                        zipCell = row.insertCell(6);
+
+                        // Add contact information to row.
+                        contactIds[contactIndex + 1] = contact._id;
+                        firstNameCell.innerHTML = contact.first_name;
+                        lastNameCell.innerHTML = contact.last_name;
+                        phoneCell.innerHTML = contact.phone_number;
+                        streetCell.innerHTML = contact.street;
+                        cityCell.innerHTML = contact.city;
+                        stateCell.innerHTML = contact.state;
+                        zipCell.innerHTML = contact.zip;
+
+                        contactIndex += 1;
+                    }
+                }
+            }
+        });
+    }
+
+    $scope.clearSearch = function()
+    {
+        getUsersContacts();
+    }
+
+
+    // Given 2 contacts' data for some field (2 first names, 2 streets, etc.) determine which order they should go in when sorting
+    function compareContacts(a, b)
+    {
+        // Remove characters that aren't alphanumeric, digits, or space.
+        // Capital letters could affect the order when sorting.
+        var contactA = a.replace(/[^a-zA-Z0-9 ]/g, '').toLowerCase()
+        var contactB = b.replace(/[^a-zA-Z0-9 ]/g, '').toLowerCase()
+
+        // a comes first
+        if (contactA < contactB)
+            return -1;
+
+        // b comes first
+        if (contactA > contactB)
+            return 1;
+
+        // a and b are equal, order doesn't matter
+        return 0;
+    }
+
+
+    // Use Selection Sort to sort table in ascending order by the given column (column 0 = first name, 1 = last name, 2 = phone #, etc.)
+    $scope.sortContacts = function(column)
+    {
+        $http.post('/contacts/allcontacts',
+        {
+            "user_id": userId
+        })
+        .then(function(response) {
+            if (response.status == 200)
+            {
+                var contactTable = document.getElementById("contactTable");
+                var tableSize = contactTable.rows.length;
+
+                // If there is only 1 contact in the table (or empty table) it doesn't need to be sorted
+                if (tableSize <= 2)
+                {
+                    return;
+                }
+                
+                // Selection Sort
+                for (var row = 1; row < tableSize.valueOf(); row++)
+                {
+                    var minRow = row;
+
+                    // Find the row below of the current row that has the lowest value for the column we're checking.
+                    // This is the row that will trade positions with the current row.
+                    for (var laterRow = row + 1; laterRow < tableSize.valueOf(); laterRow++)
+                    {
+                        if(compareContacts(contactTable.rows[minRow].cells[column].innerHTML, contactTable.rows[laterRow].cells[column].innerHTML) > 0)
+                        {
+                            minRow = laterRow;
+                        }
+                    }
+
+                    // Swap current row with a row below it that has the lowest value, if it is also lower than the current row's value.
+                    if (minRow != row)
+                    {
+                        // Swap 2 rows one cell at a time
+                        for (var col = 0; col < contactTable.rows[row].cells.length.valueOf(); col++)
+                        {
+                            var temp = contactTable.rows[row].cells[col].innerHTML;
+                            contactTable.rows[row].cells[col].innerHTML = contactTable.rows[minRow].cells[col].innerHTML;
+                            contactTable.rows[minRow].cells[col].innerHTML = temp;
+                        }
+                    }
+                }
+            }
+        });
+    }
+
+
     $scope.home = function () {
         hideOrShow( "loggedInDiv", false);
         hideOrShow( "accessUIDiv", false);

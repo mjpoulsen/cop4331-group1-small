@@ -17,10 +17,8 @@ router.get('/', function(req, res, next) {
 /* POST Request. */
 /*
     Returns all contacts associated with a User's ID.
-
     JSON Requirements:
         user_id: String
-
     Example:
     {
         user_id: 5a5ffa7467d8f7bef4623040
@@ -71,7 +69,6 @@ router.get('/:contactId', function(req, res, next) {
 /* POST Request. */
 /*
     Adds a Contact to the Contacts table.
-
     JSON Requirements:
         user_id: String,
         first_name: String,
@@ -81,7 +78,6 @@ router.get('/:contactId', function(req, res, next) {
         city: String,
         state: String,
         zip: Number
-
     Example:
     {
         user_id: 5a5ffa7467d8f7bef4623040,
@@ -144,17 +140,17 @@ router.patch('/', function(req, res, next) {
 /*
     JSON Requirements:
         contactId: String
-
     Example:
     {
         "userId": "5f4dcc3b5aa765d61d8327deb882cf99"
         "contactId": "admin"
     }
 */
-router.delete('/deleteContact', function(req, res, next) {
-    var contactId = req.body.contactId;
+router.post('/deleteContact', function(req, res, next) {
     var userId = req.body.userId;
-    if (contactId) {
+    var contactId = req.body.contactId;
+    console.log("ContactId: " + req.body.contactId + " UserId: " + req.body.userId);
+    if (contactId && userId) {
         Contact.remove({_id: contactId, user_id: userId}, function(err) {
             if (!err) {
                     res.status(200).json({

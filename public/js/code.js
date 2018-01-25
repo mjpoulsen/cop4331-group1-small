@@ -133,6 +133,7 @@ app.controller('myCtrl', function($scope, $http) {
                 hideOrShow( "createUserDiv", false);
                 hideOrShow( "viewContactsUIDiv", true);
                 hideOrShow( "addContactDiv", false);
+		hideOrShow("deleteContactDiv", false);
 			} else {
 				document.getElementById("loginResult").innerHTML = "User/Password combination incorrect.";
 				return;

@@ -169,7 +169,6 @@ app.controller('myCtrl', function($scope, $http) {
                 var contactTable = document.getElementById("contactTable");
                 var i, contact, row;
                 var firstNameCell, lastNameCell, phoneCell, streetCell, cityCell, stateCell, zipCell, deleteCell;
-				var deleteButton;
                 for (i = 0; i < size; i++) {
                     // Obtain contact.
                     contact = retContacts[i];

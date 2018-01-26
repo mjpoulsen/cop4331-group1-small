@@ -1,0 +1,32 @@
+body
+{
+    background-image: url("../images/backgroundNew.png");
+    background-repeat: repeat;
+}
+
+h1 
+{
+    font-size: 40px;
+}
+
+table, th, td {
+    border: none;
+    border-collapse: collapse;
+}
+
+th, td {
+    padding: 15px;
+}
+
+th {
+    text-align: left;
+    background-color: black;
+    color: white;
+}
+
+tr:nth-child(even) {
+    background-color: #eee;
+}
+tr:nth-child(odd) {
+    background-color:#fff;
+}

@@ -1,27 +1,18 @@
-// TODO support editing contact.
-// TODO support deleting contact.
-
+// Imports and constant members.
 const express = require('express');
-const router = express.Router();
 const mongoose = require('mongoose');
-
+const router = express.Router();
 const Contact = require('../models/contact');
-
-/* GET Request. */
-router.get('/', function(req, res, next) {
-    res.status(200).json({
-        message: 'Handling GET requests for /contacts'
-    });
-});
 
 /* POST Request. */
 /*
     Returns all contacts associated with a User's ID.
     JSON Requirements:
         user_id: String
+
     Example:
     {
-        user_id: 5a5ffa7467d8f7bef4623040
+        "user_id": "5a5ffa7467d8f7bef4623040"
     }
 */
 router.post('/allcontacts', function(req, res, next) {
@@ -30,7 +21,6 @@ router.post('/allcontacts', function(req, res, next) {
         Contact.find({user_id: usersID }, function(err, docs) {
             if (!err){
                 res.status(200).json({
-                    message: 'Handling POST requests for /contacts',
                     returnedContact: docs
                 });
             } else {
@@ -41,27 +31,6 @@ router.post('/allcontacts', function(req, res, next) {
         });
     } else {
         res.status(204).json({message: 'No content. UserID was not provided.'});
-    }
-
-});
-
-/* GET Request with Id. */
-router.get('/:contactId', function(req, res, next) {
-    const id = req.params.contactId;
-    // TODO determine whether or no if-statement is necessary. As of now, route is not get called if contactId is null.
-    if (id) {
-        Contact.findById(id)
-            .exec()
-            .then(function(doc) {
-                console.log(doc);
-                res.status(200).json(doc);
-            })
-            .catch(function(err) {
-                console.log(err);
-                res.status(500).json({error: err});
-            });
-    } else {
-        res.status(204).json({error: "Must supply Contact ID."});
     }
 
 });
@@ -77,17 +46,18 @@ router.get('/:contactId', function(req, res, next) {
         street: String,
         city: String,
         state: String,
-        zip: Number
+        zip: String
+
     Example:
     {
-        user_id: 5a5ffa7467d8f7bef4623040,
-        first_name: john,
-        last_name: doe,
-        phone_number: 407-867-5309,
-        street: 123 Park Ave.,
-        city: Winter Park,
-        state: Florida,
-        zip: 32789
+        "user_id": "5a5ffa7467d8f7bef4623040",
+        "first_name": "john",
+        "last_name": "doe",
+        "phone_number": "407-867-5309",
+        "street": "123 Park Ave.",
+        "city": "Winter Park",
+        "state": "Florida",
+        "zip": "32789"
     }
 */
 router.post('/addcontact', function(req, res, next) {
@@ -116,7 +86,6 @@ router.post('/addcontact', function(req, res, next) {
         contact.save().then(function(result) {
             console.log(result);
             res.status(201).json({
-                message: 'Handling POST requests to /contacts',
                 createdUser: contact
             });
         }).catch(function(err) {
@@ -128,43 +97,37 @@ router.post('/addcontact', function(req, res, next) {
     }
 });
 
-/* PATCH Request. */
-router.patch('/', function(req, res, next) {
-    res.status(200).json({
-        message: 'Handling PATCH requests for /contacts'
-    });
-});
-
 /* DELETE Request. */
-// If status code 204 is returned, the credentials do not exist.
+// If status code 204 is returned, credentials were not provided.
 /*
     JSON Requirements:
         contactId: String
+
     Example:
     {
-        "userId": "5f4dcc3b5aa765d61d8327deb882cf99"
-        "contactId": "admin"
+        "user_Id": "5f4dcc3b5aa765d61d8327deb882cf99",
+        "contactId": "5a6152357b2e0604b452d615"
     }
 */
 router.post('/deleteContact', function(req, res, next) {
-    var userId = req.body.userId;
+    var user_Id = req.body.user_Id;
     var contactId = req.body.contactId;
-    console.log("ContactId: " + req.body.contactId + " UserId: " + req.body.userId);
-    if (contactId && userId) {
-        Contact.remove({_id: contactId, user_id: userId}, function(err) {
+    console.log("user_id: " + user_Id + " contactId: " + contactId);
+    if (contactId && user_Id) {
+        Contact.remove({_id: contactId, user_id: user_Id}, function(err) {
             if (!err) {
                     res.status(200).json({
                         message: 'Contact was deleted.'
                     });
                 } else {
                     res.status(500).json({
-                        error: 'I don\'t know...'
+                        message: err
                     });
                 }
         });
     } else {
         res.status(204).json({
-            error: 'Please provide a contactId or userId.'
+            error: 'ContactId or userId was not provided.'
         });
     }
     

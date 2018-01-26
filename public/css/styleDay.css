@@ -1,3 +1,7 @@
+* {
+	font-family: Helvetica, sans-serif;
+}
+
 body
 {
     background-image: url("../images/backgroundNew.png");
@@ -7,6 +11,7 @@ body
 h1 
 {
     font-size: 40px;
+	margin: 0;
 }
 
 table, th, td {
@@ -29,4 +34,8 @@ tr:nth-child(even) {
 }
 tr:nth-child(odd) {
     background-color:#fff;
+}
+
+.styleButton {
+	margin-bottom: 2em;
 }

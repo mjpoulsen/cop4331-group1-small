@@ -112,7 +112,7 @@ app.controller('myCtrl', function($scope, $http) {
                 document.getElementById("newUserError").innerHTML = "Please verify a User Name and Password was submitted.";
             }
         });
-    }
+    };
 
     //
     $scope.submitContact = function () {
@@ -151,7 +151,7 @@ app.controller('myCtrl', function($scope, $http) {
                 document.getElementById("newContactError").innerHTML = "Please verify all * attributes are submitted." + userId;
             }
         });
-    }
+    };
 
 
 	$scope.doLogin = function()
@@ -497,6 +497,6 @@ app.controller('myCtrl', function($scope, $http) {
 		document.getElementById("deletedContactFirstName").value = "";
 		document.getElementById("deletedContactLastName").value = "";
 		hideOrShow("deleteContactDiv", false);
-	}
+	};
 
 });

@@ -30,9 +30,9 @@ const contactsRoutes = require('./api/routes/contacts');
 // ============================================================================================= //
 
 // Connect to Database
-const password = process.env.MONGO_ATLAS_PW;
+const dbPassword = process.env.MONGO_ATLAS_PW;
 mongoose.connect(
-    'mongodb://cruder:' + password +
+    'mongodb://cruder:' + dbPassword +
     '@cop4331-small-project-shard-00-00-rpedg.mongodb.net:27017,cop4331-small-project-shard-' +
     '00-01-rpedg.mongodb.net:27017,cop4331-small-project-shard-00-02-rpedg.mongodb.net:27017/' +
     'test?ssl=true&replicaSet=cop4331-small-project-shard-0&authSource=admin'
@@ -85,7 +85,7 @@ app.set('view engine', 'html');
 app.use(express.static(path.join(__dirname, 'public')));
 
 // Homepage
-app.get('/', function(req, res, next) {
+app.get('/', function(req, res) {
     res.render('index');
 });
 
@@ -101,7 +101,7 @@ app.use(function(req, res, next) {
 });
 
 // Catches all thrown errors.
-app.use(function(error, req, res, next) {
+app.use(function(error, req, res) {
     res.status(error.status || 500); // either return error code from thrown exception or 500.
     res.json({
         error: {

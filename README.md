@@ -7,18 +7,18 @@ Slack Channel:
 
 TODOs:
 
-	1. Determine roles.
-	2. Document entry API.
-	3. Edit & delete contacts functions.
-	4. Larger search bar
-	5. Smaller sort buttons
-	6. Protect against SQL injection
+	1. Larger search bar.
+	2. Smaller sort buttons.
+	3. Protect against SQL injection.
 	
 
-SOLVED:
+COMPLETED:
 
 	1. Decide type of stack. LAMP, MEAN, WISA, etc.
 	2. Invite everyone to Slack channel.
+	3. Determine roles.
+	4. Document API.
+	4. Edit & delete contacts.
 
 RUN:
 
@@ -26,23 +26,27 @@ RUN:
 		- Install NodeJs, current or LTS version is acceptable. https://nodejs.org/en/
 
 	Instructions:
-		1. Open terminal or console and navigate to the cop4331-group1-small/myapp directory.
+		1. Open terminal or console and navigate to the cop4331-group1-small directory.
 		2. Once inside, type: node server.js
-		3. Execute command. If done correctly, the output should read: "Server started on port: 8080"
-		4. Server is now running on http://localhost:8080
-		5. Curl API -- see below documentation.
-		6. To quit, press ctrl + c.
+		3. Execute command. If done correctly, the output should read: "Server started on port: <PORT#>"
+		4. Server is now running on http://localhost:<PORT#>
+		5. Visit webpage or Curl API (see below documentation).
+		6. To stop the server, press ctrl + c.
 
 
 API:
 
-	To send web request to the server, I use an application that sends different types of curl requests. I use Postman (https://www.getpostman.com/). Some people like Insomnia (https://insomnia.rest/), and our professor mentioned a Chrome extension. It does not really matter which program you choose as they all perform similar. 
+	To CURL the web server's API, use an application that sends different types of HTTP requests. Our 
+	recommendation is Postman (https://www.getpostman.com/). Other viable options include 
+	Insomnia (https://insomnia.rest/), a web browser extension, or CURL Unix command from a terminal/console.
+	It does not really matter which program you choose as they all perform similar functions. 
 	
-	Supports: GET and POST
+	Server only supports POST operations. However, a GET request to the server (without a path) will return the 
+	homepage.
 
-	User API:
+	Public User API:
 
-		Login
+		Login -- POST
 		localhost:8080/users/login
 		SampleInput:
 		{
@@ -50,7 +54,7 @@ API:
     		"password": "f4dcc3b5aa765d61d8327deb882cf99 5"    		
 		}
 
-		Submit User
+		Submit User -- POST
 		localhost:8080/submituser
 		SampleInput:
 		{
@@ -61,15 +65,15 @@ API:
         	"email": "jdoe@aol.com"
     	}
 
-	Contact API:
+	Public Contact API:
 
-		View All Contacts
+		View All Contacts -- POST
 		localhost:8080/contacts/allcontacts
 		{
      	   "user_id": "5a5ffa7467d8f7bef4623040"
     	}
 
-    	Add Contact
+    	Add Contact -- POST
     	localhost:8080/contacts/addcontact
     	{
 	        "user_id": "5a5ffa7467d8f7bef4623040",
@@ -81,3 +85,11 @@ API:
 	        "state": "Florida",
 	        "zip": "32789"
 	    }
+	    
+	    Delete Contact -- POST
+        localhost:8080/contacts/deleteContact
+        {
+           "user_id": "5a5ffa7467d8f7bef4623040".
+           "contactId": "5a6152357b2e0604b452d615"
+        }
+

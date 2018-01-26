@@ -1,22 +1,26 @@
 // ============================================================================================= //
 // Imports and Constant Initializations                                                          //
 // ============================================================================================= //
-
 const express = require('express'); // ExpressJs Framework.
 const app = express();
 const morgan = require('morgan'); // Logger.
-const bodyParser = require('body-parser');
-// Helps to parses requests more efficiently.
+
+// BodyParser -- helps to parses requests more efficiently.
 // May not need body-parser as Express comes with a json and urlencoded parser methods:
 // https://expressjs.com/en/api.html
+const bodyParser = require('body-parser');
+
 
 const path = require('path');
 
 // Used for CRUD operations with MongoDB.
 const mongoose = require('mongoose');
 // A third party Promise object; Mongoose's Promise is deprecated.
+// For more information about Promises:
+// https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise
 mongoose.Promise = require('bluebird');
 
+// Import api/routes
 const usersRoutes = require('./api/routes/users');
 const contactsRoutes = require('./api/routes/contacts');
 // ============================================================================================= //
@@ -73,16 +77,19 @@ app.use(function(req, res, next) {
 // ============================================================================================= //
 // Route Handling                                                                                //
 // ============================================================================================= //
+
+// Discovers public and views directories.
 app.engine('.html', require('ejs').__express);
 app.set('views', __dirname + '/views');
 app.set('view engine', 'html');
 app.use(express.static(path.join(__dirname, 'public')));
 
+// Homepage
 app.get('/', function(req, res, next) {
     res.render('index');
 });
 
-
+// Routes requests for /users and /contacts
 app.use('/users', usersRoutes);
 app.use('/contacts', contactsRoutes);
 

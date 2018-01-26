@@ -1,21 +1,11 @@
-// TODO support editing profile.
-// TODO decide whether or not to delete a user.
-
+// Imports and constant members.
 const express = require('express');
-const router = express.Router();
 const mongoose = require('mongoose');
-
+const router = express.Router();
 const User = require('../models/user');
 
-/* GET Request. */
-router.get('/', function(req, res, next) {
-    res.status(200).json({
-        message: 'Handling GET requests for /users'
-    });
-});
-
 /* POST Login Request. */
-// If status code 204 is returned, the credentials do not exist.
+// If status code 204 is returned, the credentials were not provided.
 /*
     JSON Requirements:
         user_name: String
@@ -23,8 +13,8 @@ router.get('/', function(req, res, next) {
 
     Example:
     {
-        user_name: admin
-        password: 5f4dcc3b5aa765d61d8327deb882cf99
+        "user_name": "admin",
+        "password": "5f4dcc3b5aa765d61d8327deb882cf99"
     }
 */
 router.post('/login', function(req, res, next) {
@@ -65,11 +55,11 @@ router.post('/login', function(req, res, next) {
 
     Example:
     {
-        user_name: admin
-        password: 5f4dcc3b5aa765d61d8327deb882cf99
-        first_name: john
-        last_name: doe
-        email: jdoe@aol.com
+        "user_name": "admin",
+        "password": "5f4dcc3b5aa765d61d8327deb882cf99",
+        "first_name": "john",
+        "last_name": "doe",
+        "email": "jdoe@aol.com"
     }
 */
 router.post('/submituser', function(req, res, next) {
@@ -91,33 +81,18 @@ router.post('/submituser', function(req, res, next) {
 
         user.save().then(function(result) {
             console.log(result);
+            res.status(201).json({
+                createdUser: user
+            });
         }).catch(function(err) {
             console.log(err);
-        });
-
-        res.status(201).json({
-            message: 'Handling POST requests to /users',
-            createdUser: user
+            res.status(500).json({
+                error: err
+            });
         });
     } else {
-        res.status(204).json({error: "Missing user_name or password."});
+        res.status(204).json({error: "Missing user name or password."});
     }
-
-
-});
-
-/* PATCH Request. */
-router.patch('/', function(req, res, next) {
-    res.status(200).json({
-        message: 'Handling PATCH requests for /users'
-    });
-});
-
-/* DELETE Request. */
-router.delete('/', function(req, res, next) {
-    res.status(200).json({
-        message: 'Handling DELETE requests for /contacts'
-    });
 });
 
 module.exports = router;

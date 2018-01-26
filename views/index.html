@@ -4,11 +4,19 @@
 	<script type="text/javascript" src="../angular.min.js"></script>
 	<script type="text/javascript" src="../js/code.js"></script>
 	<script type="text/javascript" src="../js/md5.js"></script>
-	<link href="../css/style.css" rel="stylesheet">	
+	<link id="currentStyle" href="../css/styleDay.css" rel="stylesheet">	
 </head>
 <body>
 
 <h1>COP 4331 Contact Web App</h1>
+
+<script text="text/javascript">
+  function changeStyle(sheet) {
+	document.getElementById('currentStyle').setAttribute('href', sheet);
+  }
+</script>
+<button onclick="changeStyle('../css/styleDay.css')" >Default Mode</button>
+<button type="button" onclick="changeStyle('../css/style.css')" >Classic Mode</button>
 
 <div ng-app="myApp" ng-controller="myCtrl">
 

@@ -4,6 +4,8 @@ app.controller('myCtrl', function($scope, $http) {
 	var userId = 0;
 	var firstName = "";
 	var lastName = "";
+
+	// Hides or Shows a Div.
 	function hideOrShow( elementId, showState )
 	{
 		var vis = "visible";
@@ -18,6 +20,7 @@ app.controller('myCtrl', function($scope, $http) {
 		document.getElementById( elementId ).style.display = dis;
 	}
 
+	// Shows create user view.
 	$scope.createUser = function () {
         hideOrShow( "loggedInDiv", false);
         hideOrShow( "accessUIDiv", false);
@@ -25,16 +28,67 @@ app.controller('myCtrl', function($scope, $http) {
         hideOrShow( "createUserDiv", true);
 
         clearElements();
-    }
+    };
 
+    // Shows home page view.
+    $scope.home = function () {
+        hideOrShow( "loggedInDiv", false);
+        hideOrShow( "accessUIDiv", false);
+        hideOrShow( "loginDiv", true);
+        hideOrShow( "createUserDiv", false);
+        hideOrShow( "viewContactsUIDiv", false);
+        hideOrShow( "addContactDiv", false);
+    };
+
+    // Shows contacts view.
+    $scope.contacts = function () {
+        clearElements();
+
+        hideOrShow( "loggedInDiv", true);
+        hideOrShow( "accessUIDiv", false);
+        hideOrShow( "loginDiv", false);
+        hideOrShow( "createUserDiv", false);
+        hideOrShow( "viewContactsUIDiv", true);
+        hideOrShow( "addContactDiv", false);
+    };
+
+    // Shows add contact view.
+    $scope.addContact = function () {
+
+        clearElements();
+
+        hideOrShow( "loggedInDiv", true);
+        hideOrShow( "accessUIDiv", false);
+        hideOrShow( "loginDiv", false);
+        hideOrShow( "createUserDiv", false);
+        hideOrShow( "viewContactsUIDiv", false);
+        hideOrShow( "addContactDiv", true);
+    };
+
+    // Logs the current user out of the web page's session.
+    $scope.doLogout = function()
+    {
+        userId = 0;
+        firstName = "";
+        lastName = "";
+
+        hideOrShow( "loggedInDiv", false);
+        hideOrShow( "accessUIDiv", false);
+        hideOrShow( "loginDiv", true);
+        hideOrShow( "createUserDiv", false);
+        hideOrShow( "viewContactsUIDiv", false);
+    };
+
+    // Submits a new user's information to the server, where it will be stored within its database.
     $scope.submitUser = function () {
+        // Obtains user's input.
         var user_name = document.getElementById("newUserName").value;
         var md5password = md5(document.getElementById("newUserPassword").value);
         firstName = document.getElementById("newUserFirstName").value;
         lastName = document.getElementById("newUserLastName").value;
         var email = document.getElementById("newUserEmail").value;
 
-
+        // Sends request to the server.
         $http.post('/users/submituser', {
             "user_name": user_name,
             "password" : md5password,
@@ -43,23 +97,24 @@ app.controller('myCtrl', function($scope, $http) {
             "email" : email
         })
         .then(function(response) {
-            if (response.status == 201) {
+            // If user's information was successfully added, status code will be 201.
+            if (response.status === 201) {
 
                 clearElements();
                 document.getElementById("loginResult").innerHTML = "Please login with your user name and password.";
 
-                hideOrShow( "loggedInDiv", false);
-                hideOrShow( "accessUIDiv", false);
-                hideOrShow( "loginDiv", true);
-                hideOrShow( "createUserDiv", false);
-                hideOrShow( "viewContactsUIDiv", false);
+                hideOrShow("loggedInDiv", false);
+                hideOrShow("accessUIDiv", false);
+                hideOrShow("loginDiv", true);
+                hideOrShow("createUserDiv", false);
+                hideOrShow("viewContactsUIDiv", false);
             } else {
-                document.getElementById("newUserError").innerHTML = "Please verify  a User Name and Password was submitted.";
-                return;
+                document.getElementById("newUserError").innerHTML = "Please verify a User Name and Password was submitted.";
             }
         });
     }
 
+    //
     $scope.submitContact = function () {
 
         var first_name = document.getElementById("newContactFirstName").value;
@@ -82,7 +137,7 @@ app.controller('myCtrl', function($scope, $http) {
             "zip" : zip
         })
         .then(function(response) {
-            if (response.status == 201) {
+            if (response.status === 201) {
 
                 clearElements();
                 getUsersContacts();
@@ -94,7 +149,6 @@ app.controller('myCtrl', function($scope, $http) {
                 hideOrShow( "addContactDiv", false);
             } else {
                 document.getElementById("newContactError").innerHTML = "Please verify all * attributes are submitted." + userId;
-                return;
             }
         });
     }
@@ -116,7 +170,7 @@ app.controller('myCtrl', function($scope, $http) {
 			"password" : md5password
 		})
 		.then(function(response) {
-			if (response.status == 200) {
+			if (response.status === 200) {
                 var jsonObject = response.data;
                 firstName = jsonObject.first_name;
                 lastName = jsonObject.last_name;
@@ -136,7 +190,6 @@ app.controller('myCtrl', function($scope, $http) {
 		hideOrShow("deleteContactDiv", false);
 			} else {
 				document.getElementById("loginResult").innerHTML = "User/Password combination incorrect.";
-				return;
 			}
 		});
 	};
@@ -146,7 +199,7 @@ app.controller('myCtrl', function($scope, $http) {
             "user_id": userId
         })
         .then(function(response) {
-            if (response.status == 200) {
+            if (response.status === 200) {
                 //Clear table
                 var tableSize =  document.getElementById("contactTable").rows.length;
                 for (i = tableSize.valueOf() - 1; i > 0; i--) {
@@ -161,16 +214,11 @@ app.controller('myCtrl', function($scope, $http) {
                     if (retContacts.hasOwnProperty(key)) size++;
                 }
 
-
-                
-                var contactIds = new Array(size);
-
                 document.getElementById("contactList").innerHTML = size.toString();
 
                 var contactTable = document.getElementById("contactTable");
                 var i, contact, row;
                 var firstNameCell, lastNameCell, phoneCell, streetCell, cityCell, stateCell, zipCell, deleteCell;
-				var deleteButton;
                 for (i = 0; i < size; i++) {
                     // Obtain contact.
                     contact = retContacts[i];
@@ -212,7 +260,7 @@ app.controller('myCtrl', function($scope, $http) {
 	$scope.deleteContact = function()
 	{
 		hideOrShow("deleteContactDiv", true);
-	}
+	};
 	$scope.removeFromList = function()
 	{
 		var firstName = document.getElementById('deletedContactFirstName').value;
@@ -221,35 +269,32 @@ app.controller('myCtrl', function($scope, $http) {
 		for(var i = 1, row; row = table.rows[i]; i++)
 		{
 			var contact_id = document.getElementById('row'+i+'cell7').innerHTML;
-			if((document.getElementById('row'+(i)+'cell0').innerHTML == firstName) && 
-			(document.getElementById('row'+(i)+'cell1').innerHTML == lastName))
-			{			
-						 var data = 
-						 {
-                    "userId": userId,
-                    "contactId": contact_id
-						 };
-						$http.post('/contacts/deleteContact', JSON.stringify(data))
-						.then(function(response) 
-						{
-						if (response.status == 200) {
+			if((document.getElementById('row'+(i)+'cell0').innerHTML === firstName) &&
+			(document.getElementById('row'+(i)+'cell1').innerHTML === lastName))
+            {
+                var data =
+                {
+                   "user_Id": userId,
+                   "contactId": contact_id
+                };
 
-					console.log("deleted");
-					getUsersContacts();
-			   		hideOrShow("deleteContactDiv", false);
-					clearElements();
-            } 		else {
-                console.log(response.status);
-            }
-						});
+                $http.post('/contacts/deleteContact', JSON.stringify(data))
+                .then(function(response)
+                {
+                    if (response.status === 200) {
+					    console.log("deleted");
+					    getUsersContacts();
+			   		    hideOrShow("deleteContactDiv", false);
+					    clearElements();
+                    } else {
+                        console.log(response.status);
+                    }
+                });
 			}
 		}
 		hideOrShow("deleteContactDiv", false);
 		clearElements();
-	}
-
-
-
+	};
 
     // User types search tags into search bar, separated by spaces.
     // For each contact, combine all contact fields into a single string separated by spaces.
@@ -260,7 +305,7 @@ app.controller('myCtrl', function($scope, $http) {
             "user_id": userId
         })
         .then(function(response) {
-            if (response.status == 200)
+            if (response.status === 200)
             {
                 //Clear table
                 var tableSize =  document.getElementById("contactTable").rows.length;
@@ -289,14 +334,13 @@ app.controller('myCtrl', function($scope, $http) {
                 {
                     contact = retContacts[i];
 
-                    id = contact._id;
-                    fName = contact.first_name;
-                    lName = contact.last_name;
-                    pNum = contact.phone_number;
-                    street = contact.street;
-                    city = contact.city;
-                    state = contact.state;
-                    zip = contact.zip;
+                    var fName = contact.first_name;
+                    var lName = contact.last_name;
+                    var pNum = contact.phone_number;
+                    var street = contact.street;
+                    var city = contact.city;
+                    var state = contact.state;
+                    var zip = contact.zip;
 
                     var combinedStr = fName + " " + lName + " " + pNum + " " + street + " " + city + " " + state + " " + zip;
 
@@ -318,7 +362,7 @@ app.controller('myCtrl', function($scope, $http) {
                     for(tagIndex = 0; tagIndex < searchTags.length; tagIndex++)
                     {
                         tag = searchTags[tagIndex];
-                        if (contactString.includes(tag) == false)
+                        if (contactString.includes(tag) === false)
                         {
                             contactMatches = false;
                             break;
@@ -340,25 +384,25 @@ app.controller('myCtrl', function($scope, $http) {
 
                         // Add contact information to row.
                         contactIds[contactIndex + 1] = contact._id;
-                        firstNameCell.innerHTML = contact.first_name;
-                        lastNameCell.innerHTML = contact.last_name;
-                        phoneCell.innerHTML = contact.phone_number;
-                        streetCell.innerHTML = contact.street;
-                        cityCell.innerHTML = contact.city;
-                        stateCell.innerHTML = contact.state;
-                        zipCell.innerHTML = contact.zip;
+                        firstNameCell.innerHTML = fName;
+                        lastNameCell.innerHTML = lName;
+                        phoneCell.innerHTML = pNum;
+                        streetCell.innerHTML = street;
+                        cityCell.innerHTML = city;
+                        stateCell.innerHTML = state;
+                        zipCell.innerHTML = zip;
 
                         contactIndex += 1;
                     }
                 }
             }
         });
-    }
+    };
 
     $scope.clearSearch = function()
     {
         getUsersContacts();
-    }
+    };
 
 
     // Given 2 contacts' data for some field (2 first names, 2 streets, etc.) determine which order they should go in when sorting
@@ -366,8 +410,8 @@ app.controller('myCtrl', function($scope, $http) {
     {
         // Remove characters that aren't alphanumeric, digits, or space.
         // Capital letters could affect the order when sorting.
-        var contactA = a.replace(/[^a-zA-Z0-9 ]/g, '').toLowerCase()
-        var contactB = b.replace(/[^a-zA-Z0-9 ]/g, '').toLowerCase()
+        var contactA = a.replace(/[^a-zA-Z0-9 ]/g, '').toLowerCase();
+        var contactB = b.replace(/[^a-zA-Z0-9 ]/g, '').toLowerCase();
 
         // a comes first
         if (contactA < contactB)
@@ -383,105 +427,50 @@ app.controller('myCtrl', function($scope, $http) {
 
 
     // Use Selection Sort to sort table in ascending order by the given column (column 0 = first name, 1 = last name, 2 = phone #, etc.)
-    $scope.sortContacts = function(column)
-    {
+    $scope.sortContacts = function(column) {
         $http.post('/contacts/allcontacts',
-        {
-            "user_id": userId
-        })
-        .then(function(response) {
-            if (response.status == 200)
             {
-                var contactTable = document.getElementById("contactTable");
-                var tableSize = contactTable.rows.length;
+                "user_id": userId
+            })
+            .then(function (response) {
+                if (response.status === 200) {
+                    var contactTable = document.getElementById("contactTable");
+                    var tableSize = contactTable.rows.length;
 
-                // If there is only 1 contact in the table (or empty table) it doesn't need to be sorted
-                if (tableSize <= 2)
-                {
-                    return;
-                }
-                
-                // Selection Sort
-                for (var row = 1; row < tableSize.valueOf(); row++)
-                {
-                    var minRow = row;
-
-                    // Find the row below of the current row that has the lowest value for the column we're checking.
-                    // This is the row that will trade positions with the current row.
-                    for (var laterRow = row + 1; laterRow < tableSize.valueOf(); laterRow++)
-                    {
-                        if(compareContacts(contactTable.rows[minRow].cells[column].innerHTML, contactTable.rows[laterRow].cells[column].innerHTML) > 0)
-                        {
-                            minRow = laterRow;
-                        }
+                    // If there is only 1 contact in the table (or empty table) it doesn't need to be sorted
+                    if (tableSize <= 2) {
+                        return;
                     }
 
-                    // Swap current row with a row below it that has the lowest value, if it is also lower than the current row's value.
-                    if (minRow != row)
-                    {
-                        // Swap 2 rows one cell at a time
-                        for (var col = 0; col < contactTable.rows[row].cells.length.valueOf(); col++)
-                        {
-                            var temp = contactTable.rows[row].cells[col].innerHTML;
-                            contactTable.rows[row].cells[col].innerHTML = contactTable.rows[minRow].cells[col].innerHTML;
-                            contactTable.rows[minRow].cells[col].innerHTML = temp;
+                    // Selection Sort
+                    for (var row = 1; row < tableSize.valueOf(); row++) {
+                        var minRow = row;
+
+                        // Find the row below of the current row that has the lowest value for the column we're checking.
+                        // This is the row that will trade positions with the current row.
+                        for (var laterRow = row + 1; laterRow < tableSize.valueOf(); laterRow++) {
+                            if (compareContacts(contactTable.rows[minRow].cells[column].innerHTML, contactTable.rows[laterRow].cells[column].innerHTML) > 0) {
+                                minRow = laterRow;
+                            }
+                        }
+
+                        // Swap current row with a row below it that has the lowest value, if it is also lower than the current row's value.
+                        if (minRow !== row) {
+                            // Swap 2 rows one cell at a time
+                            for (var col = 0; col < contactTable.rows[row].cells.length.valueOf(); col++) {
+                                var temp = contactTable.rows[row].cells[col].innerHTML;
+                                contactTable.rows[row].cells[col].innerHTML = contactTable.rows[minRow].cells[col].innerHTML;
+                                contactTable.rows[minRow].cells[col].innerHTML = temp;
+                            }
                         }
                     }
                 }
-            }
-        });
-    }
-
-
-    $scope.home = function () {
-        hideOrShow( "loggedInDiv", false);
-        hideOrShow( "accessUIDiv", false);
-        hideOrShow( "loginDiv", true);
-        hideOrShow( "createUserDiv", false);
-        hideOrShow( "viewContactsUIDiv", false);
-        hideOrShow( "addContactDiv", false);
-    }
-
-    $scope.contacts = function () {
-        clearElements();
-
-        hideOrShow( "loggedInDiv", true);
-        hideOrShow( "accessUIDiv", false);
-        hideOrShow( "loginDiv", false);
-        hideOrShow( "createUserDiv", false);
-        hideOrShow( "viewContactsUIDiv", true);
-        hideOrShow( "addContactDiv", false);
-    }
-
-    $scope.addContact = function () {
-
-        clearElements();
-
-        hideOrShow( "loggedInDiv", true);
-        hideOrShow( "accessUIDiv", false);
-        hideOrShow( "loginDiv", false);
-        hideOrShow( "createUserDiv", false);
-        hideOrShow( "viewContactsUIDiv", false);
-        hideOrShow( "addContactDiv", true);
-    }
-
-
-	$scope.doLogout = function()
-	{
-		userId = 0;
-		firstName = "";
-		lastName = "";	
-
-		hideOrShow( "loggedInDiv", false);
-		hideOrShow( "accessUIDiv", false);
-		hideOrShow( "loginDiv", true);
-        hideOrShow( "createUserDiv", false);
-        hideOrShow( "viewContactsUIDiv", false);
-	};
+            });
+    };
 
     function clearElements() {
 
-        console.log("Clearing elements...")
+        console.log("Clearing elements...");
 
         document.getElementById("loginName").value = "";
         document.getElementById("loginPassword").value = "";

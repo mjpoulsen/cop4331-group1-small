@@ -218,7 +218,7 @@ app.controller('myCtrl', function($scope, $http) {
 
                 var contactTable = document.getElementById("contactTable");
                 var i, contact, row;
-                var firstNameCell, lastNameCell, phoneCell, streetCell, cityCell, stateCell, zipCell, deleteCell;
+                var firstNameCell, lastNameCell, phoneCell, streetCell, cityCell, stateCell, zipCell, idCell;
                 for (i = 0; i < size; i++) {
                     // Obtain contact.
                     contact = retContacts[i];
@@ -232,9 +232,9 @@ app.controller('myCtrl', function($scope, $http) {
                     cityCell = row.insertCell(4);
                     stateCell = row.insertCell(5);
                     zipCell = row.insertCell(6);
-					deleteCell = row.insertCell(7);
-					deleteCell.setAttribute('id', 'row'+(i+1)+'cell7');
-					deleteCell.style.visibility = "hidden";
+					idCell = row.insertCell(7);
+					idCell.setAttribute('id', 'row'+(i+1)+'cell7');
+                    idCell.style.display = 'none';
 					
 					
 
@@ -247,7 +247,7 @@ app.controller('myCtrl', function($scope, $http) {
                     cityCell.innerHTML = contact.city;
                     stateCell.innerHTML = contact.state;
                     zipCell.innerHTML = contact.zip;
-					deleteCell.innerHTML = contact._id;
+					idCell.innerHTML = contact._id;
 					firstNameCell.setAttribute('id', 'row'+(i+1)+'cell0');
 					lastNameCell.setAttribute('id', 'row'+(i+1)+'cell1');
                 }

@@ -264,18 +264,17 @@ app.controller('myCtrl', function($scope, $http) {
 	$scope.removeFromList = function()
 	{
 		var fName = document.getElementById('deletedContactFirstName').value;
-		var lName = document.getElementById('deletedContactLastName').value;
+        var lName = document.getElementById('deletedContactLastName').value;
 
-        var firstName = fName.replace(/[^a-zA-Z0-9 ]/g, '').toLowerCase();
-        var lastName = lName.replace(/[^a-zA-Z0-9 ]/g, '').toLowerCase();
+        var table = document.getElementById("contactTable");
+        var tableSize = table.rows.length;
 
-		var table = document.getElementById('contactTable');
+        for(var i = 1; i < tableSize.valueOf(); i++)
+        {
+            var contact_id = table.rows[i].cells[7].innerHTML;
 
-		for(var i = 1, row; row = table.rows[i]; i++)
-		{
-			var contact_id = document.getElementById('row'+i+'cell7').innerHTML;
-			if((document.getElementById('row'+(i)+'cell0').innerHTML.toLowerCase() == firstName) &&
-			(document.getElementById('row'+(i)+'cell1').innerHTML.toLowerCase() == lastName))
+            if(compareContacts(table.rows[i].cells[0].innerHTML, fName) == 0 
+                && compareContacts(table.rows[i].cells[1].innerHTML, lName) == 0)
             {
                 var data =
                 {
@@ -287,18 +286,18 @@ app.controller('myCtrl', function($scope, $http) {
                 .then(function(response)
                 {
                     if (response.status === 200) {
-					    console.log("deleted");
-					    getUsersContacts();
-			   		    hideOrShow("deleteContactDiv", false);
-					    clearElements();
+                        console.log("deleted");
+                        getUsersContacts();
+                        hideOrShow("deleteContactDiv", false);
+                        clearElements();
                     } else {
                         console.log(response.status);
                     }
                 });
-			}
-		}
-		hideOrShow("deleteContactDiv", false);
-		clearElements();
+            }
+        }
+        hideOrShow("deleteContactDiv", false);
+        clearElements();
 	};
 
     // User types search tags into search bar, separated by spaces.

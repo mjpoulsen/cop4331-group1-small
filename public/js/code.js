@@ -407,6 +407,7 @@ app.controller('myCtrl', function($scope, $http) {
     $scope.clearSearch = function()
     {
         getUsersContacts();
+        clearElements();
     };
 
 
@@ -495,6 +496,8 @@ app.controller('myCtrl', function($scope, $http) {
         document.getElementById("newUserEmail").value = "";
 		document.getElementById("deletedContactFirstName").value = "";
 		document.getElementById("deletedContactLastName").value = "";
+
+		document.getElementById("searchBar").value = "";
     }
 	
 	$scope.cancelDelete = function()

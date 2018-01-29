@@ -263,14 +263,19 @@ app.controller('myCtrl', function($scope, $http) {
 	};
 	$scope.removeFromList = function()
 	{
-		var firstName = document.getElementById('deletedContactFirstName').value;
-		var lastName = document.getElementById('deletedContactLastName').value;
+		var fName = document.getElementById('deletedContactFirstName').value;
+		var lName = document.getElementById('deletedContactLastName').value;
+
+        var firstName = fName.replace(/[^a-zA-Z0-9 ]/g, '').toLowerCase();
+        var lastName = lName.replace(/[^a-zA-Z0-9 ]/g, '').toLowerCase();
+
 		var table = document.getElementById('contactTable');
+
 		for(var i = 1, row; row = table.rows[i]; i++)
 		{
 			var contact_id = document.getElementById('row'+i+'cell7').innerHTML;
-			if((document.getElementById('row'+(i)+'cell0').innerHTML === firstName) &&
-			(document.getElementById('row'+(i)+'cell1').innerHTML === lastName))
+			if((document.getElementById('row'+(i)+'cell0').innerHTML.toLowerCase() == firstName) &&
+			(document.getElementById('row'+(i)+'cell1').innerHTML.toLowerCase() == lastName))
             {
                 var data =
                 {

@@ -3,6 +3,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const router = express.Router();
 const User = require('../models/user');
+const sanitize = require('mongo-sanitize');
 
 /* POST Login Request. */
 // If status code 204 is returned, the credentials were not provided.
@@ -18,8 +19,8 @@ const User = require('../models/user');
     }
 */
 router.post('/login', function(req, res, next) {
-    const user_name = req.body.user_name;
-    const password = req.body.password;
+    const user_name = sanitize(req.body.user_name);
+    const password = sanitize(req.body.password);
 
     if (user_name && password) {
         User.findOne({user_name: user_name, password: password})
@@ -63,11 +64,11 @@ router.post('/login', function(req, res, next) {
     }
 */
 router.post('/submituser', function(req, res, next) {
-    const user_name = req.body.user_name;
-    const password = req.body.password;
-    const first_name = req.body.first_name;
-    const last_name = req.body.last_name;
-    const email = req.body.email;
+    const user_name = sanitize(req.body.user_name);
+    const password = sanitize(req.body.password);
+    const first_name = sanitize(req.body.first_name);
+    const last_name = sanitize(req.body.last_name);
+    const email = sanitize(req.body.email);
 
     if (user_name && password) {
         const user = new User({

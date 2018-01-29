@@ -3,6 +3,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const router = express.Router();
 const Contact = require('../models/contact');
+const sanitize = require('mongo-sanitize');
 
 /* POST Request. */
 /*
@@ -16,7 +17,7 @@ const Contact = require('../models/contact');
     }
 */
 router.post('/allcontacts', function(req, res, next) {
-    const usersID = req.body.user_id;
+    const usersID = sanitize(req.body.user_id);
     if (usersID) {
         Contact.find({user_id: usersID }, function(err, docs) {
             if (!err){
@@ -61,14 +62,14 @@ router.post('/allcontacts', function(req, res, next) {
     }
 */
 router.post('/addcontact', function(req, res, next) {
-    const user_id = req.body.user_id;
-    const first_name = req.body.first_name;
-    const last_name = req.body.last_name;
-    const phone_number = req.body.phone_number;
-    const street = req.body.street;
-    const city = req.body.city;
-    const state = req.body.state;
-    const zip = req.body.zip;
+    const user_id = sanitize(req.body.user_id);
+    const first_name = sanitize(req.body.first_name);
+    const last_name = sanitize(req.body.last_name);
+    const phone_number = sanitize(req.body.phone_number);
+    const street = sanitize(req.body.street);
+    const city = sanitize(req.body.city);
+    const state = sanitize(req.body.state);
+    const zip = sanitize(req.body.zip);
 
     if (user_id && first_name && last_name && phone_number) {
         const contact = new Contact({
@@ -110,8 +111,8 @@ router.post('/addcontact', function(req, res, next) {
     }
 */
 router.post('/deleteContact', function(req, res, next) {
-    var user_Id = req.body.user_Id;
-    var contactId = req.body.contactId;
+    var user_Id = sanitize(req.body.user_Id);
+    var contactId = sanitize(req.body.contactId);
     console.log("user_id: " + user_Id + " contactId: " + contactId);
     if (contactId && user_Id) {
         Contact.remove({_id: contactId, user_id: user_Id}, function(err) {

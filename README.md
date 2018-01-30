@@ -7,18 +7,21 @@ Slack Channel:
 
 TODOs:
 
-	1. Larger search bar.
-	2. Smaller sort buttons.
-	3. Protect against SQL injection.
+	1. Larger search bar. (optional)
 	
 
 COMPLETED:
 
-	1. Decide type of stack. LAMP, MEAN, WISA, etc.
-	2. Invite everyone to Slack channel.
-	3. Determine roles.
-	4. Document API.
-	4. Edit & delete contacts.
+	 1. Decide type of stack. LAMP, MEAN, WISA, etc. (Decided to use MEAN)
+	 2. Invite everyone to Slack channel.
+	 3. Determine roles.
+	 4. Document API.
+	 5. Add contacts.
+	 6. Search contacts.
+	 7. Sort contacts by any column.
+	 8. Delete contacts.
+	 9. Smaller buttons.
+	10. Sanitize input to prevent NoSQL injection.
 
 RUN:
 
